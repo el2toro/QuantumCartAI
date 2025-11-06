@@ -3,5 +3,6 @@
   <Folder Name="/Services/Catalog/">
     <Project Path="Services/Catalog/Catalog.API/Catalog.API.csproj" Id="2bd79d17-7b77-4761-844b-f5e923df6ca4" />
     <Project Path="Services/Catalog/Catalog.Domain/Catalog.Domain.csproj" />
+    <Project Path="Services/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj" Id="f94d1416-b86c-4ad0-b30a-fe8437fa3573" />
   </Folder>
 </Solution>

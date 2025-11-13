@@ -1,11 +1,6 @@
-﻿using Catalog.API.Data;
-using Catalog.API.Models;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿namespace Catalog.API.Products.GetProducts;
 
-namespace Catalog.API.Products.GetProducts;
-
-public record GetProductsQuery() : IRequest<GetProductsResult>;
+public record GetProductsQuery(IEnumerable<Guid> CategoryIds) : IRequest<GetProductsResult>;
 public record GetProductsResult(IEnumerable<Product> Products);
 public class GetProductsHandler(ProductDbContext productDbContext) : IRequestHandler<GetProductsQuery, GetProductsResult>
 {

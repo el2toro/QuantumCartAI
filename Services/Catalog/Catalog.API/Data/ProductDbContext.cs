@@ -1,7 +1,4 @@
-﻿using Catalog.API.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace Catalog.API.Data;
+﻿namespace Catalog.API.Data;
 
 public class ProductDbContext : DbContext
 {

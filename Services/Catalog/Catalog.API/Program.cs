@@ -1,8 +1,5 @@
-using Carter;
-using Catalog.API.Data;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Reflection;
 
@@ -26,7 +23,7 @@ builder.Services.AddDbContext<ProductDbContext>(config =>
 builder.Services.AddHealthChecks()
     .AddNpgSql(
       builder.Configuration.GetConnectionString("Database")!,
-      name: "PostgreSQL",
+      name: "PostgreSQL CatalogDb",
       failureStatus: HealthStatus.Degraded);
 
 var app = builder.Build();

@@ -29,12 +29,16 @@ builder.Services.AddGrpcClient<InventoryQueryService.InventoryQueryServiceClient
 
 builder.Services.AddHttpClient("Inventory", client =>
 {
-    client.BaseAddress = new Uri(builder.Configuration["Inventory:HttpUrl"]);
+    client.BaseAddress = new Uri(builder.Configuration["Inventory:HttpUrl"]!);
 });
 
-builder.Services.AddSingleton<EventStoreClient>(sp =>
-    new EventStoreClient(EventStoreClientSettings.Create(
-        builder.Configuration["EventStore:ConnectionString"])));
+builder.Services.AddEventStoreClient(builder.Configuration.GetConnectionString("EventStore")!);
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "CartService";
+});
 
 var app = builder.Build();
 

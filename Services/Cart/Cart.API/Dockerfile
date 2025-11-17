@@ -1,28 +1,30 @@
-# Services/Cart/Cart.API/Dockerfile
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
+# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-ENV NUGET_FALLBACK_PACKAGES=""
-
-# CORRECT PATHS – using "Services" (with s) as you confirmed
-COPY ["Services/Cart/Cart.API/Cart.API.csproj", "Services/Cart/Cart.API/"]
-COPY ["Services/Cart/Cart.Domain/Cart.Domain.csproj", "Services/Cart/Cart.Domain/"]
-COPY ["Services/Cart/Cart.Application/Cart.Application.csproj", "Services/Cart/Cart.Application/"]
-COPY ["Services/Cart/Cart.Infrastructure/Cart.Infrastructure.csproj", "Services/Cart/Cart.Infrastructure/"]
-
-# Restore
-RUN dotnet restore "Services/Cart/Cart.API/Cart.API.csproj"
-
-# Copy all source code
-COPY . .
-
-# Publish
-WORKDIR "/src/Services/Cart/Cart.API"
-RUN dotnet publish -c Release -o /app/publish --no-restore
-
-# Runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+# This stage is used when running from VS in fast mode (Default for Debug configuration)
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER $APP_UID
 WORKDIR /app
-COPY --from=build /app/publish .
 EXPOSE 5000
+EXPOSE 5001
+
+
+# This stage is used to build the service project
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["Services/Cart/Cart.API/Cart.API.csproj", "Services/Cart/Cart.API/"]
+RUN dotnet restore "./Services/Cart/Cart.API/Cart.API.csproj"
+COPY . .
+WORKDIR "/src/Services/Cart/Cart.API"
+RUN dotnet build "./Cart.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+# This stage is used to publish the service project to be copied to the final stage
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./Cart.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Cart.API.dll"]

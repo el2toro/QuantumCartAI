@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>8b6462b5-3499-4b9e-988f-3ace1ef81488</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..\..</DockerfileContext>
+		<DockerComposeProjectPath>..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
+		<!--<DisableImplicitNuGetFallbackFolders>true</DisableImplicitNuGetFallbackFolders>-->
+		<RestoreAdditionalProjectFallbackFolders>
+			C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
+		</RestoreAdditionalProjectFallbackFolders>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.76.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="MediatR" Version="13.1.0" />
+		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Cart.Domain\Cart.Domain.csproj" />
+		<ProjectReference Include="..\Cart.Application\Cart.Application.csproj" />
+		<ProjectReference Include="..\Cart.Infrastructure\Cart.Infrastructure.csproj" />
+	</ItemGroup>
+
+	<!-- ========== PROTOBUF INTEGRATION ========== -->
+	<ItemGroup>
+		<Protobuf Include="$(SolutionDir)Services\Cart\proto\inventory.proto"
+            GrpcServices="Client"
+            ProtoRoot="$(SolutionDir)Services\Cart\proto" />
+	</ItemGroup>
+</Project>

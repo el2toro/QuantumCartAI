@@ -1,0 +1,45 @@
+﻿version: "3.9"
+
+services:
+  eventstoredb:
+    image: eventstore/eventstore:latest
+    environment:
+      - EVENTSTORE_CLUSTER_SIZE=1
+      - EVENTSTORE_RUN_PROJECTIONS=All
+      - EVENTSTORE_START_STANDARD_PROJECTIONS=true
+      - EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP=true
+      - EVENTSTORE_INSECURE=true
+    ports:
+      - "2113:2113"
+      - "1113:1113"
+    volumes:
+      - eventstore-data:/var/lib/eventstore
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  # cart-api:
+  #   image: quantumcartai/cart-api:latest   # ← We'll build this separately
+  #   environment:
+  #     - EventStore__ConnectionString=esdb://eventstoredb:2113?tls=false
+  #     - ConnectionStrings__Redis=redis:6379
+  #     - Inventory__GrpcUrl=http://inventory-fake:80
+  #     - ASPNETCORE_URLS=http://+:5000
+  #   ports:
+  #     - "5000:5000"
+  #   depends_on:
+  #     - eventstoredb
+  #     - redis
+
+  inventory-fake:
+    image: mendhak/http-https-echo:15
+    ports:
+      - "5001:80"
+
+volumes:
+  eventstore-data:
+  redis-data:

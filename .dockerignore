@@ -28,3 +28,25 @@ README.md
 !.git/config
 !.git/packed-refs
 !.git/refs/heads/**
+
+# .dockerignore – put this at QuantumCartAI root
+**/bin/
+**/obj/
+**/.vs/
+**/.git/
+**/.gitignore
+**/.dockerignore
+
+# Exclude ALL other services – ONLY Cart is needed
+Services/Catalog/**
+Services/Identity/**
+Services/Payment/**
+Services/Notification/**
+Services/Order/**
+Services/Product/**
+!Services/Cart/**
+
+# Exclude node_modules, etc.
+node_modules/
+*.log
+*.tmp

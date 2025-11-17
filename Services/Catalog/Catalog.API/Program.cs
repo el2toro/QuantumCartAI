@@ -1,3 +1,5 @@
+using Catalog.API.Interfaces;
+using Catalog.API.Repositories;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -7,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 var assembly = Assembly.GetAssembly(typeof(Program));
 // Add services to the container.
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
 builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssembly(assembly!);

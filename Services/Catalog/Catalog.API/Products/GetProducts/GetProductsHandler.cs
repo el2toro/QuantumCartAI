@@ -1,12 +1,16 @@
-﻿namespace Catalog.API.Products.GetProducts;
+﻿using Catalog.API.Interfaces;
 
-public record GetProductsQuery(IEnumerable<Guid> CategoryIds) : IRequest<GetProductsResult>;
+namespace Catalog.API.Products.GetProducts;
+
+public record GetProductsQuery() : IRequest<GetProductsResult>;
 public record GetProductsResult(IEnumerable<Product> Products);
-public class GetProductsHandler(ProductDbContext productDbContext) : IRequestHandler<GetProductsQuery, GetProductsResult>
+public class GetProductsHandler(IProductRepository productRepository)
+    : IRequestHandler<GetProductsQuery, GetProductsResult>
 {
-    public async Task<GetProductsResult> Handle(GetProductsQuery request, CancellationToken cancellationToken)
+    public async Task<GetProductsResult> Handle(GetProductsQuery query, CancellationToken cancellationToken)
     {
-        var products = await productDbContext.Products.ToListAsync(cancellationToken);
+        var products = await productRepository.GetProductsAsync(cancellationToken);
+
         return new GetProductsResult(products);
     }
 }

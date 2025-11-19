@@ -2,12 +2,7 @@
   <Folder Name="/Services/" />
   <Folder Name="/Services/Cart/">
     <Project Path="Services/Cart/Cart.API/Cart.API.csproj" />
-    <Project Path="Services/Cart/Cart.Application/Cart.Application.csproj" Id="ee10fbd8-771c-4d89-8f37-e1164e47824c" />
     <Project Path="Services/Cart/Cart.Domain/Cart.Domain.csproj" Id="480858eb-9dd4-485f-839b-8087d3717db6" />
-    <Project Path="Services/Cart/Cart.Infrastructure/Cart.Infrastructure.csproj" Id="7ee67f43-dd6b-474c-8a4a-90a33f0e5b94" />
-  </Folder>
-  <Folder Name="/Services/Cart/proto/">
-    <File Path="inventory.proto" />
   </Folder>
   <Folder Name="/Services/Catalog/">
     <Project Path="Services/Catalog/Catalog.API/Catalog.API.csproj" Id="2bd79d17-7b77-4761-844b-f5e923df6ca4" />

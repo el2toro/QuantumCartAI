@@ -1,9 +1,9 @@
-using Catalog.API.Interfaces;
-using Catalog.API.Repositories;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Reflection;
+using Catalog.API.Interfaces;
+using Catalog.API.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 

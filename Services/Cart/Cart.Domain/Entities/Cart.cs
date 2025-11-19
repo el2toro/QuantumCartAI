@@ -15,10 +15,12 @@ public class Cart : AggregateRoot
     private Address? _shippingAddress;
     private string? _shippingOption;
     private Money _shippingCost = Money.Zero;
+    private CustomerId _customerId;
+    private CartStatus _cartStatus = CartStatus.Active;
 
     // Public read-only
-    public CustomerId CustomerId { get; private set; }
-    public CartStatus Status { get; private set; }
+    public CustomerId CustomerId => _customerId;
+    public CartStatus Status => _cartStatus;
     public IReadOnlyList<CartItem> Items => _items.AsReadOnly();
     public string? PromoCode => _promoCode;
     public Address? ShippingAddress => _shippingAddress;
@@ -27,8 +29,7 @@ public class Cart : AggregateRoot
     public Money Subtotal => _items.Aggregate(Money.Zero, (sum, i) => sum + i.UnitPrice.Multiply(i.Quantity));
 
     // New cart
-    public Cart(CartId cartId, CustomerId customerId) : base(cartId.Value) { }
-
+    public Cart(CartId cartId) : base(cartId.Value) { }
 
     public void AddItem(ProductId productId, Quantity requestedQty, Money unitPrice)
     {

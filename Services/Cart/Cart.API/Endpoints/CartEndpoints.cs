@@ -1,13 +1,10 @@
 ﻿using Cart.Application.Commands;
-using Carter;
-using Mapster;
-using MediatR;
 
 namespace Cart.API.Endpoints;
 
 public class CartEndpoints : ICarterModule
 {
-    public record AddItemRequest(Guid? CustomerId, Guid ProductId, int Quantity);
+    public record AddItemRequest(Guid? CustomerId, Guid? CartId, Guid ProductId, int Quantity);
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet("cart/{customerId}", (Guid customerId, ISender sender) =>
@@ -19,8 +16,9 @@ public class CartEndpoints : ICarterModule
         app.MapPost("cart", async (AddItemRequest request, ISender sender) =>
         {
             var command = request.Adapt<AddItemCommand>();
-            var result = await sender.Send(command);
-            return Results.Ok(result);
+            var response = await sender.Send(command);
+
+            return Results.Ok(response.Cart);
         })
         .WithDisplayName("Cart")
         .WithDescription("Cart")

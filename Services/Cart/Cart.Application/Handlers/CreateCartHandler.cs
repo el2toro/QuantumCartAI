@@ -11,8 +11,7 @@ public class CreateCartHandler(IDistributedCache distributedCache)
     public async Task<CreateCartResult> Handle(CreateCartCommand request, CancellationToken cancellationToken)
     {
         var cart = new Domain.Entities.Cart(
-            new Domain.ValueObjects.CartId(request.CartId),
-             new Domain.ValueObjects.CustomerId(request.CartId));
+            new Domain.ValueObjects.CartId(request.CartId));
 
 
         var existingCart = await distributedCache.GetStringAsync(request.CartId.ToString());

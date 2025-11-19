@@ -1,6 +1,7 @@
+using BuildingBlocks.Messaging.MassTransit;
+using Cart.Application.EventHandlers;
 using Cart.Application.Handlers;
-using Carter;
-using MediatR;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,15 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
     options.InstanceName = "CartService";
 });
+
+var eventHandlerAssemblies = new Assembly[]
+{
+    typeof(CartItemAddedEventHandler).Assembly,
+   // typeof(ProjectUpdatedEventHandler).Assembly,
+   // typeof(ProjectDeletedEventHandler).Assembly
+};
+
+builder.Services.AddMessageBroker(builder.Configuration, eventHandlerAssemblies);
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

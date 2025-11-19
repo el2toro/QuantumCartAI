@@ -1,16 +1,16 @@
 ﻿using Cart.Application.Commands;
-using MediatR;
 using Cart.Domain.ValueObjects;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
 using MassTransit;
 using Cart.Domain.Events;
 using Cart.Application.Dtos;
+using BuildingBlocks.CQRS;
 
 namespace Cart.Application.Handlers;
 
 public class AddItemHandler(IDistributedCache distributedCache, IPublishEndpoint publisher)
-    : IRequestHandler<AddItemCommand, AddItemResult>
+    : ICommandHandler<AddItemCommand, AddItemResult>
 {
     public async Task<AddItemResult> Handle(AddItemCommand command, CancellationToken cancellationToken)
     {

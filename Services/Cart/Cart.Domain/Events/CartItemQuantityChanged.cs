@@ -4,7 +4,7 @@ namespace Cart.Domain.Events;
 
 public record CartItemQuantityChanged(
     Guid CartId,
-    SkuId SkuId,
+    ProductId ProductId,
     Quantity OldQuantity,
     Quantity NewQuantity
 ) : DomainEventBase;

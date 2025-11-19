@@ -4,15 +4,15 @@ namespace Cart.Domain.Entities;
 
 public class CartItem
 {
-    public SkuId SkuId { get; private set; }
+    public ProductId ProductId { get; private set; }
     public Quantity Quantity { get; private set; }
     public Money UnitPrice { get; private set; }
 
     private CartItem() { }  // EF
 
-    internal CartItem(SkuId skuId, Quantity quantity, Money unitPrice)
+    internal CartItem(ProductId productId, Quantity quantity, Money unitPrice)
     {
-        SkuId = skuId;
+        ProductId = productId;
         Quantity = quantity;
         UnitPrice = unitPrice;
     }

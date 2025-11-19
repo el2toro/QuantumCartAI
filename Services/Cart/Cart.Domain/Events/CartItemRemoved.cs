@@ -4,6 +4,6 @@ namespace Cart.Domain.Events;
 
 public record CartItemRemoved(
     Guid CartId,
-    SkuId SkuId,
+    ProductId ProductId,
     Quantity Quantity
 ) : DomainEventBase;

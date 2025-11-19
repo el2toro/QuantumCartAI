@@ -2,7 +2,7 @@
 
 namespace Cart.Domain.Events;
 
-public record CartItemAdded(
+public record CartItemAddedEvent(
     Guid CartId,
     ProductId ProductId,
     Quantity Quantity,

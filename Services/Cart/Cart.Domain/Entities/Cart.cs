@@ -36,19 +36,6 @@ public class Cart : AggregateRoot
         //var addQty = requestedQty.Min(Quantity.From(1));
         //if (addQty == Quantity.Zero) throw new OutOfStockException($"No ATP for {skuId}");
 
-        //var existing = _items.FirstOrDefault(i => i.SkuId == skuId);
-        //if (existing != null)
-        //{
-        //    Apply(new CartItemQuantityChanged(Id, skuId, existing.Quantity, existing.Quantity + addQty));
-        //}
-        //else
-        //{
-        //    Apply(new CartItemAdded(Id, skuId, addQty, unitPrice));
-        //}
-
-        //var expiresAt = DateTime.UtcNow.AddMinutes(15);
-        //Apply(new ReserveRequested(Id, skuId, addQty, expiresAt));
-
 
         // Check if product exists in Catalog/Inventory (call CatalogService)
         // Then check quantity available of that product
@@ -65,7 +52,7 @@ public class Cart : AggregateRoot
         }
         else
         {
-            Apply(new CartItemAdded(Id, productId, requestedQty, unitPrice));
+            Apply(new CartItemAddedEvent(Id, productId, requestedQty, unitPrice));
         }
 
         //var expiresAt = DateTime.UtcNow.AddMinutes(15);
@@ -115,7 +102,7 @@ public class Cart : AggregateRoot
 
     // === EVENT HANDLERS (When) ===
 
-    private void When(CartItemAdded e)
+    private void When(CartItemAddedEvent e)
     {
         _items.Add(new CartItem(e.ProductId, e.Quantity, e.UnitPrice));
     }

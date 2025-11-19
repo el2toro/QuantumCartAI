@@ -1,5 +1,4 @@
-﻿using Cart.Application.DTOs;
-using MediatR;
+﻿using MediatR;
 
 namespace Cart.Application.Commands;
 

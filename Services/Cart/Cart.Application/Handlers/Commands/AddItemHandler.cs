@@ -1,5 +1,4 @@
-﻿using Cart.Application.Commands;
-using Cart.Domain.ValueObjects;
+﻿using Cart.Domain.ValueObjects;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
 using MassTransit;
@@ -8,7 +7,11 @@ using Cart.Application.Dtos;
 using BuildingBlocks.CQRS;
 using Cart.Application.Interfaces;
 
-namespace Cart.Application.Handlers;
+namespace Cart.Application.Handlers.Commands;
+
+
+public record AddItemCommand(Guid? CustomerId, Guid? CartId, Guid ProductId, int Quantity, Currency Currency) : ICommand<AddItemResult>;
+public record AddItemResult(CartDto Cart);
 
 public class AddItemHandler(IDistributedCache distributedCache,
     IPublishEndpoint publisher, ICatalogGrpcService catalogGrpcService)

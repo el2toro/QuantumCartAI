@@ -1,7 +1,7 @@
 using BuildingBlocks.Messaging.MassTransit;
 using Cart.API.Services;
-using Cart.Application.EventHandlers;
-using Cart.Application.Handlers;
+using Cart.Application.Handlers.Commands;
+using Cart.Application.Handlers.Events;
 using Cart.Application.Interfaces;
 using Catalog.gRPC;
 using System.Reflection;

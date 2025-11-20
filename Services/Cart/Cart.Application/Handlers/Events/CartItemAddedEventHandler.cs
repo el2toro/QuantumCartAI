@@ -1,7 +1,7 @@
 ﻿using Cart.Domain.Events;
 using MassTransit;
 
-namespace Cart.Application.EventHandlers;
+namespace Cart.Application.Handlers.Events;
 
 public class CartItemAddedEventHandler : IConsumer<CartItemAddedEvent>
 {

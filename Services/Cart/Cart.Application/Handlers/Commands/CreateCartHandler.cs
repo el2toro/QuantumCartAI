@@ -1,9 +1,12 @@
-﻿using Cart.Application.Commands;
-using Microsoft.Extensions.Caching.Distributed;
+﻿using Cart.Domain.ValueObjects;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
 
-namespace Cart.Application.Handlers;
+namespace Cart.Application.Handlers.Commands;
+
+public record CreateCartCommand(Guid CartId, Currency Currency) : IRequest<CreateCartResult>;
+public record CreateCartResult();
 
 public class CreateCartHandler(IDistributedCache distributedCache)
     : IRequestHandler<CreateCartCommand, CreateCartResult>

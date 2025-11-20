@@ -11,9 +11,13 @@ public class CartEndpoints : ICarterModule
     {
         app.MapGet("cart/{customerId}", async (Guid customerId, ISender sender) =>
         {
-            var cart = await sender.Send(new GetCartQuery(customerId));
-            return Results.Ok(cart);
-        });
+            var result = await sender.Send(new GetCartQuery(customerId));
+            return Results.Ok(result.Cart);
+        })
+        .WithDisplayName("GetCart")
+        .WithDescription("GetCart")
+        .WithSummary("Get Cart By CustomerId")
+        .Produces(StatusCodes.Status200OK);
 
         app.MapPost("cart", async (AddItemRequest request, ISender sender) =>
         {
@@ -22,9 +26,9 @@ public class CartEndpoints : ICarterModule
 
             return Results.Ok(response.Cart);
         })
-        .WithDisplayName("Cart")
-        .WithDescription("Cart")
-        .WithSummary("Add Item To Cart")
+        .WithDisplayName("AddItem")
+        .WithDescription("AddItem")
+        .WithSummary("Add Item To The Cart")
         .Produces(StatusCodes.Status200OK);
 
         app.MapGet("cart/{cartId}/items", (Guid cartId, ISender sender) =>

@@ -8,28 +8,28 @@ namespace Cart.Domain.Entities;
 public class Cart : AggregateRoot
 {
     // Private state
-
     private readonly List<CartItem> _items = new();
     private readonly Dictionary<SkuId, DateTime> _reserves = new();
-    private string? _promoCode;
-    private Address? _shippingAddress;
-    private string? _shippingOption;
-    private Money _shippingCost = Money.Zero;
-    private CustomerId _customerId;
-    private CartStatus _cartStatus = CartStatus.Active;
+    private Money _shippingCost;
+    private Currency _currency;
 
     // Public read-only
-    public CustomerId CustomerId => _customerId;
-    public CartStatus Status => _cartStatus;
+    public CustomerId CustomerId { get; private set; }
+    public CartStatus Status { get; private set; } = CartStatus.Active;
     public IReadOnlyList<CartItem> Items => _items.AsReadOnly();
-    public string? PromoCode => _promoCode;
-    public Address? ShippingAddress => _shippingAddress;
-    public string? ShippingOption => _shippingOption;
-    public Money ShippingCost => _shippingCost;
-    public Money Subtotal => _items.Aggregate(Money.Zero, (sum, i) => sum + i.UnitPrice.Multiply(i.Quantity));
+    public string? PromoCode { get; private set; }
+    public Address? ShippingAddress { get; private set; }
+    public string? ShippingOption { get; private set; }
+    public Money ShippingCost { get; private set; }
+    public Money Subtotal => _items.Aggregate(Money.Zero(_currency), (sum, i) => sum + i.UnitPrice.Multiply(i.Quantity));
+    public Currency Currency { get; private set; }
 
     // New cart
-    public Cart(CartId cartId) : base(cartId.Value) { }
+    public Cart(CartId cartId, Currency currency) : base(cartId.Value)
+    {
+        _currency = currency;
+        _shippingCost = Money.Zero(currency);
+    }
 
     public void AddItem(ProductId productId, Quantity requestedQty, Money unitPrice)
     {
@@ -78,13 +78,13 @@ public class Cart : AggregateRoot
 
     public void ApplyPromo(string promoCode, Money discount)
     {
-        if (_promoCode == promoCode) return;
+        if (PromoCode == promoCode) return;
         Apply(new PromoApplied(Id, promoCode, discount));
     }
 
     public void RemovePromo(string promoCode)
     {
-        if (_promoCode != promoCode) return;
+        if (PromoCode != promoCode) return;
         Apply(new PromoRemoved(Id, promoCode));
     }
 
@@ -122,22 +122,22 @@ public class Cart : AggregateRoot
 
     private void When(PromoApplied e)
     {
-        _promoCode = e.PromoCode;
+        PromoCode = e.PromoCode;
     }
 
     private void When(PromoRemoved e)
     {
-        _promoCode = null;
+        PromoCode = null;
     }
 
     private void When(ShippingAddressSet e)
     {
-        _shippingAddress = e.Address;
+        ShippingAddress = e.Address;
     }
 
     private void When(ShippingOptionSelected e)
     {
-        _shippingOption = e.OptionId;
+        ShippingOption = e.OptionId;
         _shippingCost = e.ShippingCost;
     }
 

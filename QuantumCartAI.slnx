@@ -10,6 +10,9 @@
     <Project Path="Services/Cart/Cart.Domain/Cart.Domain.csproj" Id="480858eb-9dd4-485f-839b-8087d3717db6" />
     <Project Path="Services/Cart/Cart.Infrastructure/Cart.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/Services/Cart/Tests/">
+    <Project Path="Services/Cart/Tests/Cart.Domain.Tests/Cart.Domain.Tests.csproj" Id="26c78aeb-e633-4f1f-aa3d-0e4d02e07989" />
+  </Folder>
   <Folder Name="/Services/Catalog/">
     <Project Path="Services/Catalog/Catalog.API/Catalog.API.csproj" Id="2bd79d17-7b77-4761-844b-f5e923df6ca4" />
     <Project Path="Services/Catalog/Catalog.Tests/Catalog.Tests.csproj" Id="ace2777f-88ad-4219-90c6-e58baca0a2f9" />

@@ -1,10 +1,11 @@
 ﻿using Cart.Application.Commands;
+using Cart.Domain.ValueObjects;
 
 namespace Cart.API.Endpoints;
 
 public class CartEndpoints : ICarterModule
 {
-    public record AddItemRequest(Guid? CustomerId, Guid? CartId, Guid ProductId, int Quantity);
+    public record AddItemRequest(Guid? CustomerId, Guid? CartId, Guid ProductId, int Quantity, Currency Currency);
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet("cart/{customerId}", (Guid customerId, ISender sender) =>

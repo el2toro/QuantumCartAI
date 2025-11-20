@@ -18,8 +18,8 @@ public class AddItemHandler(IDistributedCache distributedCache,
     {
         // Create a cart instance if CustomerId/CartId is not provided       
         var cart = command.CartId.HasValue
-             ? await GetCachedCart(command.CartId.ToString()!)
-             : CreateNewCart();
+             ? await GetCachedCart(command.CartId.ToString()!, command.Currency)
+             : CreateNewCart(command.Currency);
 
         // 1. Validate ProductId (calling CatalogService)
         var productQuery = await catalogGrpcService.GetProduct(command.ProductId);
@@ -50,11 +50,11 @@ public class AddItemHandler(IDistributedCache distributedCache,
         return new AddItemResult(cartDto);
     }
 
-    private async Task<Domain.Entities.Cart> GetCachedCart(string cartId)
+    private async Task<Domain.Entities.Cart> GetCachedCart(string cartId, Currency currency)
     {
         var cachedCartJson = await distributedCache.GetStringAsync(cartId);
         var cartDto = JsonSerializer.Deserialize<CartDto>(cachedCartJson!)!;
-        var cart = new Domain.Entities.Cart(CartId.From(cartDto.Id.ToString()));
+        var cart = new Domain.Entities.Cart(CartId.From(cartDto.Id.ToString()), currency);
 
         foreach (var cartItem in cartDto.CartItems)
         {
@@ -72,9 +72,9 @@ public class AddItemHandler(IDistributedCache distributedCache,
         return new CartDto(cart.Id, cart.CustomerId?.Value, cartItems, cart.Subtotal.Amount);
     }
 
-    private Domain.Entities.Cart CreateNewCart()
+    private Domain.Entities.Cart CreateNewCart(Currency currency)
     {
-        return new Domain.Entities.Cart(CartId.New());
+        return new Domain.Entities.Cart(CartId.New(), currency);
     }
 
     private async Task CacheCartDto(CartDto cartDto)

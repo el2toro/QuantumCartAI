@@ -1,8 +1,8 @@
 ﻿namespace Cart.Domain.ValueObjects;
 
-public record Money(decimal Amount, string Currency = "USD")
+public record Money(decimal Amount, Currency Currency = Currency.USD)
 {
-    public static Money Zero => new(0m);
+    public static Money Zero(Currency currency) => new(0m, currency);
     public Money Multiply(Quantity qty) => this with { Amount = Amount * qty.Value };
 
     public static Money operator +(Money a, Money b)

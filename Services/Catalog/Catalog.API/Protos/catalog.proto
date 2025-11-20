@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package catalog.v1;
+
+option csharp_namespace = "Catalog.gRPC";
+
+service CatalogQueryService {
+  rpc GetProduct (CatalogQueryRequest) returns (CatalogQueryResponse);
+}
+
+message CatalogQueryRequest {
+  string id = 1;
+}
+
+message CatalogQueryResponse {
+  bool productExists = 1;
+}

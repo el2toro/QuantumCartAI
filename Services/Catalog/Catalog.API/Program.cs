@@ -4,6 +4,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Reflection;
 using Catalog.API.Interfaces;
 using Catalog.API.Repositories;
+using Catalog.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,11 @@ builder.Services.AddHealthChecks()
       name: "PostgreSQL CatalogDb",
       failureStatus: HealthStatus.Degraded);
 
+builder.Services.AddGrpc(options =>
+{
+    options.EnableDetailedErrors = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -42,5 +48,7 @@ app.MapHealthChecks("/health",
         ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
     });
 
+app.MapGrpcService<CatalogGrpcService>();
+app.MapGet("grpc", () => "OK");
 app.Run();
 

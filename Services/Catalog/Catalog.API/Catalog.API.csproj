@@ -31,10 +31,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="Protos\" />
 		<Folder Include="Products\GetProductById\" />
 		<Folder Include="Products\CreateProduct\" />
 		<Folder Include="Products\DeleteProduct\" />
 		<Folder Include="Products\GetProductsByCategory\" />
 		<Folder Include="Products\UpdateProduct\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Protobuf Include="Protos\catalog.proto" GrpcServices="Server" />
 	</ItemGroup>
 </Project>

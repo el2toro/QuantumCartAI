@@ -6,23 +6,27 @@ using MassTransit;
 using Cart.Domain.Events;
 using Cart.Application.Dtos;
 using BuildingBlocks.CQRS;
+using Cart.Application.Interfaces;
 
 namespace Cart.Application.Handlers;
 
-public class AddItemHandler(IDistributedCache distributedCache, IPublishEndpoint publisher)
+public class AddItemHandler(IDistributedCache distributedCache,
+    IPublishEndpoint publisher, ICatalogGrpcService catalogGrpcService)
     : ICommandHandler<AddItemCommand, AddItemResult>
 {
     public async Task<AddItemResult> Handle(AddItemCommand command, CancellationToken cancellationToken)
     {
-        // Create a cart instance if CustomerId/CartId is not provided
-
+        // Create a cart instance if CustomerId/CartId is not provided       
         var cart = command.CartId.HasValue
              ? await GetCachedCart(command.CartId.ToString()!)
              : CreateNewCart();
 
         // 1. Validate ProductId (calling CatalogService)
-        // 2. Call Pricing Service to get current price (applied Discount)
-
+        var productQuery = await catalogGrpcService.GetProduct(command.ProductId);
+        if (!productQuery.ProductExists)
+        {
+            return new AddItemResult(new CartDto(Guid.Empty, Guid.Empty, Enumerable.Empty<CartItemDto>(), 0));
+        }
 
         // 3. Add item to domain aggregate
         cart.AddItem(
@@ -31,6 +35,8 @@ public class AddItemHandler(IDistributedCache distributedCache, IPublishEndpoint
             new Money(50));
 
         var cartDto = CreateCartDto(cart);
+
+        // 2. Call Pricing Service to get current price (applied Discount)        
 
         // 4. Save the cart (Redis/Mongo/etc.)
         await CacheCartDto(cartDto);

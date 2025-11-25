@@ -19,7 +19,6 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Mapster" Version="7.4.0" />
-		<PackageReference Include="MediatR" Version="13.1.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -33,10 +32,13 @@
 	<ItemGroup>
 		<Folder Include="Protos\" />
 		<Folder Include="Products\GetProductById\" />
-		<Folder Include="Products\CreateProduct\" />
 		<Folder Include="Products\DeleteProduct\" />
 		<Folder Include="Products\GetProductsByCategory\" />
 		<Folder Include="Products\UpdateProduct\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks\BuildingBlocks.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

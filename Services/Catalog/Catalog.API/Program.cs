@@ -5,6 +5,8 @@ using System.Reflection;
 using Catalog.API.Interfaces;
 using Catalog.API.Repositories;
 using Catalog.API.Services;
+using Catalog.API.Products.CreateProduct;
+using Catalog.API.Products.GetProducts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +16,9 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 builder.Services.AddMediatR(config =>
 {
-    config.RegisterServicesFromAssembly(assembly!);
+    //config.RegisterServicesFromAssembly(assembly!);
+    config.RegisterServicesFromAssembly(typeof(CreateProductHandler).Assembly);
+    config.RegisterServicesFromAssembly(typeof(GetProductsHandler).Assembly);
 });
 
 builder.Services.AddCarter();

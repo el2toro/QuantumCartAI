@@ -10,8 +10,6 @@ public class Cart : AggregateRoot
     // Private state
     private readonly List<CartItem> _items = new();
     private readonly Dictionary<SkuId, DateTime> _reserves = new();
-    private Money _shippingCost;
-    private Currency _currency;
 
     // Public read-only
     public CustomerId CustomerId { get; private set; }
@@ -21,14 +19,14 @@ public class Cart : AggregateRoot
     public Address? ShippingAddress { get; private set; }
     public string? ShippingOption { get; private set; }
     public Money ShippingCost { get; private set; }
-    public Money Subtotal => _items.Aggregate(Money.Zero(_currency), (sum, i) => sum + i.UnitPrice.Multiply(i.Quantity));
+    public Money Subtotal => _items.Aggregate(Money.Zero(Currency), (sum, i) => sum + i.UnitPrice.Multiply(i.Quantity));
     public Currency Currency { get; private set; }
 
     // New cart
     public Cart(CartId cartId, Currency currency) : base(cartId.Value)
     {
-        _currency = currency;
-        _shippingCost = Money.Zero(currency);
+        Currency = currency;
+        ShippingCost = Money.Zero(currency);
     }
 
     public void AddItem(ProductId productId, Quantity requestedQty, Money unitPrice)
@@ -138,7 +136,7 @@ public class Cart : AggregateRoot
     private void When(ShippingOptionSelected e)
     {
         ShippingOption = e.OptionId;
-        _shippingCost = e.ShippingCost;
+        ShippingCost = e.ShippingCost;
     }
 
     private void When(ReserveRequested e)

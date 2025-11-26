@@ -27,7 +27,8 @@ public class CreateProductHandler(IProductRepository productRepository)
         {
             foreach (var categoryId in command.Categories)
             {
-                productToBeCreated.ProductCategories.Add(new ProductCategory { CategoryId = categoryId });
+                var category = await productRepository.GetCategoryById(categoryId, cancellationToken);
+                productToBeCreated.ProductCategories.Add(new ProductCategory { Category = category });
             }
         }
 

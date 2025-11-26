@@ -43,4 +43,9 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
 
         return updatedProduct;
     }
+
+    public async Task<Category> GetCategoryById(Guid categoryId, CancellationToken cancellationToken)
+    {
+        return await dbContext.Categories.FindAsync(categoryId, cancellationToken);
+    }
 }

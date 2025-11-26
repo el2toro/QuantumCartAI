@@ -8,4 +8,6 @@ public interface IProductRepository
     Task<Product> CreateProduct(Product product, CancellationToken cancellationToken);
     Task<Product> UpdateProduct(Product product, CancellationToken cancellationToken);
     Task DeleteProduct(Guid id, CancellationToken cancellationToken);
+    //TODO: Move to ICategory repo
+    Task<Category> GetCategoryById(Guid categoryId, CancellationToken cancellationToken);
 }

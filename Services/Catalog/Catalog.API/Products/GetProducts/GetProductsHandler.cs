@@ -1,7 +1,4 @@
-﻿using BuildingBlocks.CQRS;
-using Catalog.API.Interfaces;
-
-namespace Catalog.API.Products.GetProducts;
+﻿namespace Catalog.API.Products.GetProducts;
 
 public record GetProductsQuery() : ICommand<GetProductsResult>;
 public record GetProductsResult(IEnumerable<Product> Products);

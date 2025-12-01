@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 var assembly = Assembly.GetAssembly(typeof(Program));
 // Add services to the container.
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddMediatR(config =>
 {
@@ -40,10 +41,24 @@ builder.Services.AddGrpc(options =>
     options.EnableDetailedErrors = true;
 });
 
+const string corsPolicy = "luxe-eccomerce-policy";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: corsPolicy, policy =>
+    {
+        policy
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()     // needed if sending cookies or Authorization headers
+            .SetIsOriginAllowed(origin => true); // allow all origins (unsafe for prod, adjust below)
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.MapCarter();
+app.UseCors(corsPolicy);
 
 // Map the health check endpoint
 app.MapHealthChecks("/health",

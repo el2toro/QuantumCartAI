@@ -31,10 +31,6 @@
 
 	<ItemGroup>
 		<Folder Include="Protos\" />
-		<Folder Include="Products\GetProductById\" />
-		<Folder Include="Products\DeleteProduct\" />
-		<Folder Include="Products\GetProductsByCategory\" />
-		<Folder Include="Products\UpdateProduct\" />
 	</ItemGroup>
 
 	<ItemGroup>

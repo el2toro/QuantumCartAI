@@ -12,7 +12,7 @@ public class CreateProductEndpoint : ICarterModule
         List<Guid> Categories);
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("catalog", async (CreateProductRequest request, ISender sender) =>
+        app.MapPost("catalog/products", async (CreateProductRequest request, ISender sender) =>
         {
             var command = request.Adapt<CreateProductCommand>();
             var result = await sender.Send(command);

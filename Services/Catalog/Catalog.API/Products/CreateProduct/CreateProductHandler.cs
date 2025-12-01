@@ -1,7 +1,7 @@
 ﻿using BuildingBlocks.CQRS;
 using Catalog.API.DTOs;
 using Catalog.API.Interfaces;
-using System.Collections.ObjectModel;
+using Catalog.API.Repositories;
 
 namespace Catalog.API.Products.CreateProduct;
 
@@ -14,7 +14,8 @@ public record CreateProductCommand(
         int Rating,
         List<Guid> Categories) : ICommand<CreateProductResult>;
 public record CreateProductResult(ProductDto Product);
-public class CreateProductHandler(IProductRepository productRepository)
+public class CreateProductHandler(IProductRepository productRepository,
+    ICategoryRepository categoryRepository)
     : ICommandHandler<CreateProductCommand, CreateProductResult>
 {
     public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
@@ -27,7 +28,7 @@ public class CreateProductHandler(IProductRepository productRepository)
         {
             foreach (var categoryId in command.Categories)
             {
-                var category = await productRepository.GetCategoryById(categoryId, cancellationToken);
+                var category = await categoryRepository.GetCategoryByIdAsync(categoryId, cancellationToken);
                 productToBeCreated.ProductCategories.Add(new ProductCategory { Category = category });
             }
         }

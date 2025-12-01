@@ -12,22 +12,23 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
         return crearedProduct;
     }
 
-    public async Task DeleteProduct(Guid productId, CancellationToken cancellationToken)
+    public async Task DeleteProduct(Product product, CancellationToken cancellationToken)
     {
-        var existingProduct = await dbContext.Products.FindAsync(productId, cancellationToken);
-        dbContext.Products.Remove(existingProduct);
+        dbContext.Products.Remove(product);
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<Product?> GetProductById(Guid productId, CancellationToken cancellationToken)
     {
-        return await dbContext.Products.FindAsync(productId, cancellationToken);
+        return await dbContext.Products
+            .Include(p => p.ProductCategories)
+            .FirstOrDefaultAsync(p => p.Id == productId, cancellationToken);
     }
 
-    public async Task<IEnumerable<Product>> GetProductsByCategory(IEnumerable<Guid> categoryIds, CancellationToken cancellationToken)
+    public async Task<IEnumerable<Product>> GetProductsByCategoryAsync(Guid categoryId, CancellationToken cancellationToken)
     {
         return await dbContext.Products
-            .Where(p => p.ProductCategories.Any(pc => categoryIds.Contains(pc.CategoryId)))
+            .Where(p => p.ProductCategories.Any(category => category.CategoryId == categoryId))
             .ToListAsync(cancellationToken);
     }
 
@@ -42,10 +43,5 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return updatedProduct;
-    }
-
-    public async Task<Category> GetCategoryById(Guid categoryId, CancellationToken cancellationToken)
-    {
-        return await dbContext.Categories.FindAsync(categoryId, cancellationToken);
     }
 }

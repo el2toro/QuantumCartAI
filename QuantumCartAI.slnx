@@ -24,6 +24,7 @@
     <Project Path="Services/Ordering/Ordering.AAPI/Ordering.API.csproj" Id="d3842229-59a7-41c1-b61a-2967bb6ed4dd" />
     <Project Path="Services/Ordering/Ordering.Application/Ordering.Application.csproj" Id="6c314394-9b09-4f48-a19a-c4201f32631d" />
     <Project Path="Services/Ordering/Ordering.Domain/Ordering.Domain.csproj" Id="aa976e20-ef0b-46f9-98fd-ba0f77a6a0eb" />
+    <Project Path="Services/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj" Id="268e0898-7951-4139-8a4c-1796cb8a57c0" />
   </Folder>
   <Folder Name="/SharedKernel/">
     <Project Path="SharedKernel/SharedKernel/SharedKernel.csproj" Id="0b13930e-4836-48e8-a51b-d167cf9e51d8" />

@@ -37,9 +37,9 @@ public class CartEndpoints : ICarterModule
             return Results.Ok();
         });
 
-        app.MapPost("cart/{cartId}/checkout", (Guid cartId, ISender sender) =>
+        app.MapPost("cart/{cartId}/checkout", async (Guid cartId, ISender sender) =>
         {
-            // Implementation to get cart by customerId
+            var result = await sender.Send(new CartCheckoutCommand(cartId));
             return Results.Ok();
         });
 

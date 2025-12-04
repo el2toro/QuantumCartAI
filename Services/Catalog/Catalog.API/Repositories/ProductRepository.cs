@@ -1,6 +1,4 @@
-﻿using Catalog.API.Interfaces;
-
-namespace Catalog.API.Repositories;
+﻿namespace Catalog.API.Repositories;
 
 public class ProductRepository(ProductDbContext dbContext) : IProductRepository
 {

@@ -1,7 +1,4 @@
-﻿using BuildingBlocks.CQRS;
-using Catalog.API.DTOs;
-using Catalog.API.Interfaces;
-using Catalog.API.Repositories;
+﻿using Catalog.API.Repositories;
 
 namespace Catalog.API.Products.CreateProduct;
 

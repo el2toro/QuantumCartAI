@@ -8,8 +8,8 @@ public record CreateOrderRequest
 {
     [Required]
     public Guid CustomerId { get; init; }
-    public Address ShippingAddress { get; init; }
-    public Address BillingAddress { get; init; }
+    public AddressDto ShippingAddress { get; init; }
+    public AddressDto BillingAddress { get; init; }
     public string OrderNumber { get; init; }
     public string Currency { get; init; }
 

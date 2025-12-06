@@ -15,10 +15,12 @@ public record OrderDetailsDto
     public DateTime? PaidDate { get; init; }
     public DateTime? ShippedDate { get; init; }
     public DateTime? DeliveredDate { get; init; }
+    public DateTime CreatedAt { get; init; }
+    public DateTime UpdatedAt { get; init; }
     public AddressDto ShippingAddress { get; init; }
     public AddressDto BillingAddress { get; init; }
-    public List<OrderItemDetailsDto> Items { get; init; } = new();
-    public List<OrderStatusHistoryDto> StatusHistory { get; init; } = new();
+    public List<OrderItemDetailsDto> OrderItems { get; init; }
+    public List<OrderStatusHistoryDto> StatusHistory { get; init; }
     public PaymentDetailsDto Payment { get; init; }
     public ShipmentDetailsDto Shipment { get; init; }
 }

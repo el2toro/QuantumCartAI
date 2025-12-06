@@ -46,7 +46,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         });
 
         // ShippingAddress (Value Object)
-        builder.OwnsOne(o => o.ShippingAddress, sa =>
+        builder.ComplexProperty(o => o.ShippingAddress, sa =>
         {
             sa.Property(p => p.Street)
                 .HasColumnName("ShippingStreet")
@@ -74,8 +74,9 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
                 .IsRequired();
         });
 
+
         // BillingAddress (Value Object) - separate from shipping address
-        builder.OwnsOne(o => o.BillingAddress, ba =>
+        builder.ComplexProperty(o => o.BillingAddress, ba =>
         {
             ba.Property(p => p.Street)
                 .HasColumnName("BillingStreet")
@@ -97,6 +98,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
                 .HasColumnName("BillingZipCode")
                 .HasMaxLength(20);
         });
+
 
         // Status
         builder.Property(o => o.Status)
@@ -134,24 +136,24 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         // Timestamps
         builder.Property(o => o.OrderDate)
             .HasColumnName("OrderDate")
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamp with time zone")
             .IsRequired();
 
         builder.Property(o => o.PaidDate)
             .HasColumnName("PaidDate")
-            .HasColumnType("timestamp without time zone");
+            .HasColumnType("timestamp with time zone");
 
         builder.Property(o => o.ShippedDate)
             .HasColumnName("ShippedDate")
-            .HasColumnType("timestamp without time zone");
+            .HasColumnType("timestamp with time zone");
 
         builder.Property(o => o.DeliveredDate)
             .HasColumnName("DeliveredDate")
-            .HasColumnType("timestamp without time zone");
+            .HasColumnType("timestamp with time zone");
 
         builder.Property(o => o.CancelledDate)
             .HasColumnName("CancelledDate")
-            .HasColumnType("timestamp without time zone");
+            .HasColumnType("timestamp with time zone");
 
         // Other properties
         builder.Property(o => o.CancellationReason)
@@ -165,13 +167,13 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         // Audit properties
         builder.Property(o => o.CreatedAt)
             .HasColumnName("CreatedAt")
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamp with time zone")
             .IsRequired()
             .HasDefaultValueSql("NOW()");
 
         builder.Property(o => o.UpdatedAt)
             .HasColumnName("UpdatedAt")
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamp with time zone")
             .IsRequired()
             .HasDefaultValueSql("NOW()")
             .ValueGeneratedOnAddOrUpdate();

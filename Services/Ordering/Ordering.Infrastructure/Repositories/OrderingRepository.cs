@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Ordering.Application.Interfaces;
 using Ordering.Domain.Entities;
+using Ordering.Domain.ValueObjects;
 using Ordering.Infrastructure.Data;
 
 namespace Ordering.Infrastructure.Repositories;
@@ -16,16 +17,17 @@ public class OrderingRepository(OrderingDbContext dbContext)
         return createdOrder;
     }
 
-    public async Task<Order> GetOrderByIdAsync(Guid customerId, Guid orderId, CancellationToken cancellationToken)
+    public async Task<Order> GetOrderByIdAsync(CustomerId customerId, OrderId orderId, CancellationToken cancellationToken)
     {
         return await dbContext.Orders.FindAsync(orderId, cancellationToken);
     }
 
-    public async Task<IEnumerable<Order>> GetOrdersAsync(Guid customerId, CancellationToken cancellationToken)
+    public async Task<IEnumerable<Order>> GetOrdersAsync(CustomerId customerId, CancellationToken cancellationToken)
     {
         return await dbContext.Orders
             .AsNoTracking()
-            .Where(o => o.CustomerId.Value == customerId)
+            .Include(o => o.OrderItems)
+            .Where(o => o.CustomerId == customerId)
             .ToListAsync(cancellationToken);
     }
 }

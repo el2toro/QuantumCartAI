@@ -51,7 +51,7 @@ public class OrderStatusHistoryConfiguration : IEntityTypeConfiguration<OrderSta
 
         // Changed at (with default value)
         builder.Property(sh => sh.ChangedAt)
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamp with time zone")
             .IsRequired()
             .HasDefaultValueSql("NOW()");
 

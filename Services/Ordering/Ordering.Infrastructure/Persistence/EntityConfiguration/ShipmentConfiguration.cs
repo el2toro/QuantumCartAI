@@ -57,13 +57,13 @@ public class ShipmentConfiguration : IEntityTypeConfiguration<Shipment>
 
         // Timestamps
         builder.Property(s => s.ShippedDate)
-            .HasColumnType("timestamp without time zone");
+            .HasColumnType("timestamp with time zone");
 
         builder.Property(s => s.EstimatedDeliveryDate)
-            .HasColumnType("timestamp without time zone");
+            .HasColumnType("timestamp with time zone");
 
         builder.Property(s => s.DeliveredDate)
-            .HasColumnType("timestamp without time zone");
+            .HasColumnType("timestamp with time zone");
 
         // Indexes
         builder.HasIndex(s => s.OrderId);

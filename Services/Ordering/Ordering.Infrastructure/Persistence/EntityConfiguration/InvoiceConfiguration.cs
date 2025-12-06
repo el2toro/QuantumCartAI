@@ -64,11 +64,11 @@ public class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
 
         // Dates
         builder.Property(i => i.IssueDate)
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamp with time zone")
             .IsRequired();
 
         builder.Property(i => i.PaidDate)
-            .HasColumnType("timestamp without time zone");
+            .HasColumnType("timestamp with time zone");
 
         // Indexes
         builder.HasIndex(i => i.OrderId);

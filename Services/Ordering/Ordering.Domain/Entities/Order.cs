@@ -98,7 +98,11 @@ public class Order : AggregateRoot<OrderId>, IAggregateRoot
             TotalAmount = 0,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
-            CustomerNotes = customerNotes
+            CustomerNotes = customerNotes,
+            CancellationReason = "none",
+            AppliedDiscount = 10,
+            DiscountCode = "discount-1234",
+
         };
 
         // Add initial status history
@@ -121,9 +125,10 @@ public class Order : AggregateRoot<OrderId>, IAggregateRoot
         ProductId productId,
         string productName,
         string productImageUrl,
+        string productSku,
         decimal unitPrice,
-        decimal? discount,
-        int units)
+        int quantity,
+        decimal? discount)
     {
         if (Status != OrderStatus.Draft)
             throw new OrderingDomainException("Cannot modify order in current state");
@@ -132,7 +137,7 @@ public class Order : AggregateRoot<OrderId>, IAggregateRoot
 
         if (existingItem != null)
         {
-            existingItem.AddUnits(units);
+            existingItem.AddUnits(quantity);
         }
         else
         {
@@ -140,9 +145,10 @@ public class Order : AggregateRoot<OrderId>, IAggregateRoot
                 productId,
                 productName,
                 productImageUrl,
+                productSku,
                 unitPrice,
-                discount ?? 0,
-                units);
+                quantity,
+                discount ?? 0);
             _orderItems.Add(orderItem);
         }
 

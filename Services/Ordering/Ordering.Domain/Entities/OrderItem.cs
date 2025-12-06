@@ -20,19 +20,21 @@ public class OrderItem : Entity<OrderItemId>
         ProductId productId,
         string productName,
         string productImageUrl,
+        string productSku,
         decimal unitPrice,
-        decimal discount,
-        int units)
+        int quantity,
+        decimal discount)
     {
         return new OrderItem
         {
             Id = OrderItemId.Create(),
             ProductId = productId,
             ProductName = productName,
+            ProductSku = productSku,
             ProductImageUrl = productImageUrl,
             UnitPrice = unitPrice,
             Discount = discount,
-            Quantity = units
+            Quantity = quantity
         };
     }
 

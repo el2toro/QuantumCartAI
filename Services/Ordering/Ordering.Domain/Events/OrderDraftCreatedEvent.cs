@@ -1,4 +1,5 @@
-﻿using Ordering.Domain.ValueObjects;
+﻿using Ordering.Domain.Common;
+using Ordering.Domain.ValueObjects;
 
 namespace Ordering.Domain.Events;
 

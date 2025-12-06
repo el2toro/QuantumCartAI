@@ -2,6 +2,6 @@
 
 public record ProductId(Guid Value)
 {
-    public static ProductId New() => new(Guid.NewGuid());
-    public static ProductId From(string value) => new(Guid.Parse(value));
+    public static ProductId Create() => new(Guid.NewGuid());
+    public static ProductId Of(string value) => new(Guid.Parse(value));
 }

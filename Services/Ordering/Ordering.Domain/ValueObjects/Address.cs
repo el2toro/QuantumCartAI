@@ -3,16 +3,13 @@
 public sealed class Address : ValueObject
 {
     // Properties are immutable
-    public string Street { get; }
-    public string City { get; }
-    public string State { get; }
-    public string Country { get; }
-    public string ZipCode { get; }
-    public string Phone { get; }
-    public string RecipientName { get; }
-    public string Company { get; }
+    public string Street { get; private set; }
+    public string City { get; private set; }
+    public string State { get; private set; }
+    public string Country { get; private set; }
+    public string ZipCode { get; private set; }
 
-    public Address()
+    private Address()
     {
 
     }
@@ -23,10 +20,7 @@ public sealed class Address : ValueObject
         string city,
         string state,
         string country,
-        string zipCode,
-        string phone = null,
-        string recipientName = null,
-        string company = null)
+        string zipCode)
     {
         if (string.IsNullOrWhiteSpace(street))
             throw new ArgumentException("Street cannot be empty", nameof(street));
@@ -48,9 +42,6 @@ public sealed class Address : ValueObject
         State = state.Trim();
         Country = country.Trim();
         ZipCode = zipCode.Trim();
-        Phone = phone?.Trim();
-        RecipientName = recipientName?.Trim();
-        Company = company?.Trim();
     }
 
     // Equality is based on all property values
@@ -61,9 +52,6 @@ public sealed class Address : ValueObject
         yield return State;
         yield return Country;
         yield return ZipCode;
-        yield return Phone ?? string.Empty;
-        yield return RecipientName ?? string.Empty;
-        yield return Company ?? string.Empty;
     }
 
     // Validation methods
@@ -83,12 +71,9 @@ public sealed class Address : ValueObject
         string street,
         string city,
         string state,
-        string zipCode,
-        string phone = null,
-        string recipientName = null,
-        string company = null)
+        string zipCode)
     {
-        return new Address(street, city, state, "USA", zipCode, phone, recipientName, company);
+        return new Address(street, city, state, "USA", zipCode);
     }
 
     // Formatting
@@ -115,30 +100,21 @@ public sealed class Address : ValueObject
     {
         var lines = new List<string>();
 
-        if (!string.IsNullOrWhiteSpace(RecipientName))
-            lines.Add(RecipientName);
-
-        if (!string.IsNullOrWhiteSpace(Company))
-            lines.Add(Company);
-
         lines.Add(Street);
         lines.Add($"{City}, {State} {ZipCode}");
 
         if (!string.IsNullOrWhiteSpace(Country) && !Country.Equals("USA", StringComparison.OrdinalIgnoreCase))
             lines.Add(Country);
 
-        if (!string.IsNullOrWhiteSpace(Phone))
-            lines.Add($"Phone: {Phone}");
-
         return string.Join(Environment.NewLine, lines);
     }
 
     // Clone with modifications (immutable pattern)
     public Address WithStreet(string newStreet) =>
-        new Address(newStreet, City, State, Country, ZipCode, Phone, RecipientName, Company);
+        new Address(newStreet, City, State, Country, ZipCode);
 
     public Address WithCity(string newCity) =>
-        new Address(Street, newCity, State, Country, ZipCode, Phone, RecipientName, Company);
+        new Address(Street, newCity, State, Country, ZipCode);
 
     // Parse from string (if needed)
     public static bool TryParse(string addressString, out Address address)

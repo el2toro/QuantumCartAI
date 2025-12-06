@@ -1,6 +1,5 @@
 using Payment.API.DTOs;
 using Stripe;
-using Stripe.Checkout;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,35 +34,10 @@ StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
 app.MapPost("/api/create-payment-intent", async (PaymentIntentDto request) =>
 {
-    var lineItems = new List<SessionLineItemOptions>();
-    long totalAmount = 0;
-    string currency = string.Empty;
-
-    foreach (var item in request.Items)
-    {
-        lineItems.Add(new SessionLineItemOptions
-        {
-            PriceData = new SessionLineItemPriceDataOptions
-            {
-                Currency = item.PriceData.Currency,
-                ProductData = new SessionLineItemPriceDataProductDataOptions
-                {
-                    Name = item.PriceData.ProductData.Name,
-                    Images = item.PriceData.ProductData.Images
-                },
-                UnitAmount = item.PriceData.UnitAmount,
-            },
-            Quantity = item.Quantity,
-        });
-
-        totalAmount += item.PriceData.UnitAmount * item.Quantity;
-        currency = item.PriceData.Currency;
-    }
-
     var options = new PaymentIntentCreateOptions
     {
-        Amount = totalAmount,
-        Currency = currency,
+        Amount = request.Amount,
+        Currency = request.Currency,
         AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
         {
             Enabled = true           // <-- enables ALL eligible payment methods
@@ -74,25 +48,6 @@ app.MapPost("/api/create-payment-intent", async (PaymentIntentDto request) =>
     var paymentIntent = await service.CreateAsync(options);
 
     return Results.Ok(new { clientSecret = paymentIntent.ClientSecret });
-});
-
-app.MapPost("/webhook", async (HttpRequest req) =>
-{
-    var json = await new StreamReader(req.Body).ReadToEndAsync();
-    var stripeEvent = EventUtility.ConstructEvent(
-        json,
-        req.Headers["Stripe-Signature"],
-        builder.Configuration["Stripe:WebhookSecret"]
-    );
-
-    if (stripeEvent.Type == "payment_intent.succeeded")
-    {
-        var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
-        Console.WriteLine($"$3.3M PAID — CLIENT: {paymentIntent?.Metadata["client_tier"]}");
-        // Send SMS, dispatch jet, mint NFT, etc.
-    }
-
-    return Results.Ok();
 });
 
 app.Run();

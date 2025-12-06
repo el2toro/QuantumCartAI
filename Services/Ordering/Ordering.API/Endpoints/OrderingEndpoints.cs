@@ -32,15 +32,17 @@ public class OrderingEndpoints : ICarterModule
 
 
         // Get order by ID
-        group.MapGet("/{id:guid}", (ISender sender) =>
+        group.MapGet("orders/{id:guid}", async (Guid orderId, ISender sender) =>
         {
+            var result = await sender.Send(new GetOrdersQuery(orderId));
 
+            return Results.Ok(result.Orders);
         })
-            .WithName("GetOrderById")
-            .WithSummary("Get order details by ID")
-            .Produces<OrderDetailsDto>(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status404NotFound)
-            .Produces(StatusCodes.Status403Forbidden);
+        .WithName("GetOrderById")
+        .WithSummary("Get order details by ID")
+        .Produces<OrderDetailsDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound)
+        .Produces(StatusCodes.Status403Forbidden);
         // .RequireAuthorization(PolicyNames.OrderOwnerOrAdmin);
 
         // Create order draft

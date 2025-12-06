@@ -2,6 +2,7 @@
 using Mapster;
 using Ordering.Application.DTOs;
 using Ordering.Application.Interfaces;
+using Ordering.Domain.ValueObjects;
 
 namespace Ordering.Application.Handlers.Queries;
 
@@ -13,8 +14,10 @@ public class GetOrdersHandler(IOrderingRepository orderingRepository)
 {
     public async Task<GetOrdersResult> Handle(GetOrdersQuery query, CancellationToken cancellationToken)
     {
-        var orders = await orderingRepository.GetOrdersAsync(query.CustomerId, cancellationToken);
+        var orders = await orderingRepository.GetOrdersAsync(CustomerId.Of(query.CustomerId.ToString()), cancellationToken);
+
         var result = orders.Adapt<IEnumerable<OrderDetailsDto>>();
+
         return new GetOrdersResult(result);
     }
 }

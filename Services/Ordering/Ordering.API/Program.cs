@@ -3,6 +3,7 @@ using Carter;
 using Microsoft.EntityFrameworkCore;
 using Ordering.Application.Handlers.Commands;
 using Ordering.Application.Interfaces;
+using Ordering.Application.Mappings;
 using Ordering.Infrastructure.Data;
 using Ordering.Infrastructure.Repositories;
 
@@ -24,6 +25,8 @@ builder.Services.AddDbContext<OrderingDbContext>(options =>
 });
 
 builder.Services.AddMessageBroker(builder.Configuration, [typeof(CreateOrderHandler).Assembly]);
+
+MapsterConfig.RegisterMappings();
 
 var app = builder.Build();
 

@@ -1,8 +1,11 @@
 ﻿using Carter;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Ordering.Application.DTOs;
+using Ordering.Application.DTOs.Requests;
 using Ordering.Application.Handlers.Commands;
+using Ordering.Application.Handlers.Queries;
 using System.Reflection;
 
 namespace Ordering.AAPI.Endpoints;
@@ -17,10 +20,10 @@ public class OrderingEndpoints : ICarterModule
         //.WithOpenApi();
 
         // Get all orders for current customer
-        group.MapGet("/", async (ISender sender) =>
+        app.MapGet("orders", async (Guid customerId, ISender sender) =>
         {
-            var result = await sender.Send(new CreateOrderCommand());
-            return Results.Created();
+            var result = await sender.Send(new GetOrdersQuery(customerId));
+            return Results.Ok(result.Orders);
         })
         .WithName("GetCustomerOrders")
         .WithSummary("Get all orders for current customer")
@@ -41,14 +44,17 @@ public class OrderingEndpoints : ICarterModule
         // .RequireAuthorization(PolicyNames.OrderOwnerOrAdmin);
 
         // Create order draft
-        group.MapPost("/", (ISender sender) =>
+        app.MapPost("orders", async (CreateOrderRequest request, ISender sender) =>
         {
+            var command = request.Adapt<CreateOrderCommand>();
+            var result = await sender.Send(command);
 
+            return Results.Created($"/orders/{result.Order.Id}", result.Order);
         })
-            .WithName("CreateOrderDraft")
-            .WithSummary("Create a new order draft")
-            //.Produces<OrderDraftDto>(StatusCodes.Status201Created)
-            .Produces<ValidationProblem>(StatusCodes.Status400BadRequest);
+        .WithName("CreateOrderDraft")
+        .WithSummary("Create a new order draft")
+        //.Produces<OrderDraftDto>(StatusCodes.Status201Created)
+        .Produces<ValidationProblem>(StatusCodes.Status400BadRequest);
 
         //// Confirm order
         //group.MapPost("/{id:guid}/confirm", (ISender sender) =>

@@ -2,6 +2,6 @@
 
 public record ShipmentId(Guid Value)
 {
-    public static ShipmentId New() => new(Guid.NewGuid());
-    public static ShipmentId From(string value) => new(Guid.Parse(value));
+    public static ShipmentId Create() => new(Guid.NewGuid());
+    public static ShipmentId Of(string value) => new(Guid.Parse(value));
 }

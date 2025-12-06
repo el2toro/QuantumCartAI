@@ -2,6 +2,6 @@
 
 public record PaymentId(Guid Value)
 {
-    public static PaymentId New() => new(Guid.NewGuid());
-    public static PaymentId From(string value) => new(Guid.Parse(value));
+    public static PaymentId Create() => new(Guid.NewGuid());
+    public static PaymentId Of(string value) => new(Guid.Parse(value));
 }

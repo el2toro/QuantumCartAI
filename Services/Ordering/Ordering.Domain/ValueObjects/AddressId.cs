@@ -1,7 +1,7 @@
 ﻿namespace Ordering.Domain.ValueObjects;
 
-public record OrderId(Guid Value)
+public record AddressId(Guid Value)
 {
-    public static OrderId Create() => new(Guid.NewGuid());
+    public static OrderId New() => new(Guid.NewGuid());
     public static OrderId Of(string value) => new(Guid.Parse(value));
 }

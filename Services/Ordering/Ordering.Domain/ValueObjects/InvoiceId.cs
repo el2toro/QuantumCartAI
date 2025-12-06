@@ -3,6 +3,6 @@ namespace Ordering.Domain.ValueObjects;
 
 public record InvoiceId(Guid Value)
 {
-    public static InvoiceId New() => new(Guid.NewGuid());
-    public static InvoiceId From(string value) => new(Guid.Parse(value));
+    public static InvoiceId Create() => new(Guid.NewGuid());
+    public static InvoiceId Of(string value) => new(Guid.Parse(value));
 }

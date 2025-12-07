@@ -5,7 +5,7 @@ using Ordering.Domain.ValueObjects;
 
 namespace Ordering.Domain.Entities;
 
-public class Order : AggregateRoot<OrderId>, IAggregateRoot
+public class Order : AggregateRoot<OrderId>
 {
     // Private collections for relationships
     private readonly List<OrderItem> _orderItems = new();
@@ -133,9 +133,9 @@ public class Order : AggregateRoot<OrderId>, IAggregateRoot
         if (Status != OrderStatus.Draft)
             throw new OrderingDomainException("Cannot modify order in current state");
 
-        var existingItem = _orderItems.FirstOrDefault(i => i.ProductId == productId);
+        var existingItem = _orderItems.FirstOrDefault(i => i.ProductId == productId)!;
 
-        if (existingItem != null)
+        if (existingItem is not null)
         {
             existingItem.AddUnits(quantity);
         }
@@ -153,8 +153,7 @@ public class Order : AggregateRoot<OrderId>, IAggregateRoot
         }
 
         RecalculateTotalAmount();
-
-        //  AddDomainEvent(new OrderItemAddedEvent(Id, productId, units));
+        AddDomainEvent(new OrderItemAddedEvent(Id, productId, quantity));
     }
 
     public void RemoveOrderItem(ProductId productId)
@@ -162,13 +161,13 @@ public class Order : AggregateRoot<OrderId>, IAggregateRoot
         if (Status != OrderStatus.Draft)
             throw new OrderingDomainException("Cannot modify order in current state");
 
-        var item = _orderItems.FirstOrDefault(i => i.ProductId == productId);
-        if (item != null)
+        var item = _orderItems.FirstOrDefault(i => i.ProductId == productId)!;
+        if (item is not null)
         {
             _orderItems.Remove(item);
             RecalculateTotalAmount();
 
-            //AddDomainEvent(new OrderItemRemovedEvent(Id, productId));
+            AddDomainEvent(new OrderItemRemovedEvent(Id, productId));
         }
     }
 
@@ -179,8 +178,8 @@ public class Order : AggregateRoot<OrderId>, IAggregateRoot
     public Payment AddPayment(
         decimal amount,
         string paymentMethod,
-        string gatewayTransactionId = null,
-        string cardLastFour = null)
+        string gatewayTransactionId = default!,
+        string cardLastFour = default!)
     {
         if (amount <= 0)
             throw new OrderingDomainException("Payment amount must be positive");
@@ -197,19 +196,18 @@ public class Order : AggregateRoot<OrderId>, IAggregateRoot
 
         UpdatePaymentStatus();
         UpdatedAt = DateTime.UtcNow;
-
-        // AddDomainEvent(new PaymentAddedEvent(Id, payment.Id, amount));
+        AddDomainEvent(new PaymentAddedEvent(Id, payment.Id, amount));
 
         return payment;
     }
 
-    public void MarkPaymentAsPaid(PaymentId paymentId, string gatewayResponse = null)
+    public void MarkPaymentAsPaid(PaymentId paymentId, string gatewayResponse = default!)
     {
         var payment = _payments.FirstOrDefault(p => p.Id == paymentId);
         //if (payment == null)
         //    throw new PaymentNotFoundException(paymentId);
 
-        payment.MarkAsPaid(gatewayResponse);
+        payment?.MarkAsPaid(gatewayResponse);
         UpdatePaymentStatus();
 
         if (PaymentStatus == PaymentStatus.Paid)
@@ -218,7 +216,7 @@ public class Order : AggregateRoot<OrderId>, IAggregateRoot
             Status = OrderStatus.Confirmed;
 
             AddStatusHistory(OrderStatus.Confirmed, "system", "Payment confirmed");
-            // AddDomainEvent(new OrderConfirmedEvent(Id, CustomerId, OrderNumber.Value, TotalAmount));
+            AddDomainEvent(new OrderConfirmedEvent(Id, CustomerId, OrderNumber.Value, TotalAmount));
         }
     }
 
@@ -252,7 +250,7 @@ public class Order : AggregateRoot<OrderId>, IAggregateRoot
             ShippedDate = DateTime.UtcNow;
 
             AddStatusHistory(OrderStatus.Shipped, "system", $"Shipped via {carrier}");
-            //   AddDomainEvent(new OrderShippedEvent(Id, CustomerId, trackingNumber, carrier, DateTime.UtcNow));
+            AddDomainEvent(new OrderShippedEvent(Id, CustomerId, trackingNumber, carrier, DateTime.UtcNow));
         }
 
         RecalculateTotalAmount();
@@ -261,13 +259,13 @@ public class Order : AggregateRoot<OrderId>, IAggregateRoot
         return shipment;
     }
 
-    public void MarkShipmentAsDelivered(ShipmentId shipmentId, DateTime deliveredDate, string deliveryNotes = null)
+    public void MarkShipmentAsDelivered(ShipmentId shipmentId, DateTime deliveredDate, string deliveryNotes = default!)
     {
         var shipment = _shipments.FirstOrDefault(s => s.Id == shipmentId);
         //if (shipment == null)
         //    throw new ShipmentNotFoundException(shipmentId);
 
-        shipment.MarkAsDelivered(deliveredDate, deliveryNotes);
+        shipment?.MarkAsDelivered(deliveredDate, deliveryNotes);
 
         if (_shipments.All(s => s.Status == ShipmentStatus.Delivered))
         {
@@ -275,7 +273,7 @@ public class Order : AggregateRoot<OrderId>, IAggregateRoot
             DeliveredDate = deliveredDate;
 
             AddStatusHistory(OrderStatus.Delivered, "system", "All shipments delivered");
-            //   AddDomainEvent(new OrderDeliveredEvent(Id, CustomerId, deliveredDate));
+            AddDomainEvent(new OrderDeliveredEvent(Id, CustomerId, deliveredDate));
         }
 
         UpdatedAt = DateTime.UtcNow;
@@ -301,7 +299,7 @@ public class Order : AggregateRoot<OrderId>, IAggregateRoot
         _invoices.Add(invoice);
         UpdatedAt = DateTime.UtcNow;
 
-        // AddDomainEvent(new InvoiceCreatedEvent(Id, invoice.Id, invoiceNumber, TotalAmount));
+        AddDomainEvent(new InvoiceIssuedEvent(invoice.Id, Id, TotalAmount));
 
         return invoice;
     }
@@ -322,7 +320,7 @@ public class Order : AggregateRoot<OrderId>, IAggregateRoot
         UpdatedAt = DateTime.UtcNow;
 
         AddStatusHistory(OrderStatus.Confirmed, "customer", "Order confirmed");
-        //  AddDomainEvent(new OrderConfirmedEvent(Id, CustomerId, OrderNumber.Value, TotalAmount));
+        AddDomainEvent(new OrderConfirmedEvent(Id, CustomerId, OrderNumber.Value, TotalAmount));
     }
 
     public void Cancel(string reason)
@@ -336,7 +334,7 @@ public class Order : AggregateRoot<OrderId>, IAggregateRoot
         UpdatedAt = DateTime.UtcNow;
 
         AddStatusHistory(OrderStatus.Cancelled, "system", $"Order cancelled: {CancellationReason}");
-        //  AddDomainEvent(new OrderCancelledEvent(Id, CustomerId, CancellationReason, TotalAmount));
+        AddDomainEvent(new OrderCancelledEvent(Id, CustomerId, CancellationReason, TotalAmount));
     }
 
     public void StartProcessing()
@@ -348,7 +346,7 @@ public class Order : AggregateRoot<OrderId>, IAggregateRoot
         UpdatedAt = DateTime.UtcNow;
 
         AddStatusHistory(OrderStatus.Processing, "system", "Order processing started");
-        //    AddDomainEvent(new OrderProcessingStartedEvent(Id, CustomerId, OrderNumber.Value));
+        AddDomainEvent(new OrderProcessingStartedEvent(Id, CustomerId, OrderNumber.Value));
     }
 
     public void ApplyDiscount(decimal discountAmount, string discountCode)
@@ -364,7 +362,7 @@ public class Order : AggregateRoot<OrderId>, IAggregateRoot
         RecalculateTotalAmount();
         UpdatedAt = DateTime.UtcNow;
 
-        // AddDomainEvent(new DiscountAppliedEvent(Id, discountAmount, discountCode));
+        AddDomainEvent(new DiscountAppliedEvent(Id, discountAmount, discountCode));
     }
 
     public void SetShippingMethod(string method, decimal cost)
@@ -485,12 +483,12 @@ public class Order : AggregateRoot<OrderId>, IAggregateRoot
 
     public int GetTotalItemsCount() => _orderItems.Sum(i => i.Quantity);
 
-    public Payment GetLatestPayment() => _payments.OrderByDescending(p => p.PaymentDate).FirstOrDefault();
+    public Payment GetLatestPayment() => _payments.OrderByDescending(p => p.PaymentDate).FirstOrDefault()!;
 
-    public Shipment GetPrimaryShipment() => _shipments.FirstOrDefault();
+    public Shipment GetPrimaryShipment() => _shipments.FirstOrDefault()!;
 
-    public Invoice GetLatestInvoice() => _invoices.OrderByDescending(i => i.IssueDate).FirstOrDefault();
+    public Invoice GetLatestInvoice() => _invoices.OrderByDescending(i => i.IssueDate).FirstOrDefault()!;
 
     public OrderStatusHistory GetLatestStatusChange() =>
-        _statusHistory.OrderByDescending(sh => sh.ChangedAt).FirstOrDefault();
+        _statusHistory.OrderByDescending(sh => sh.ChangedAt).FirstOrDefault()!;
 }

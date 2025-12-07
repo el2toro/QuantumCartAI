@@ -50,7 +50,9 @@ public class CreateOrderHandler(IOrderingRepository orderingRepository,
 
         var createdOrder = await orderingRepository.CreateOrderAsync(order, cancellationToken);
 
-        // await publishedEndpoint.Publish<OrderCreatedEvent>("result", cancellationToken);
+        await publishedEndpoint.Publish<OrderDraftCreatedEvent>(
+            new(createdOrder.Id, createdOrder.CustomerId, createdOrder.OrderNumber.Value),
+            cancellationToken);
 
         var result = createdOrder.Adapt<OrderDetailsDto>();
 

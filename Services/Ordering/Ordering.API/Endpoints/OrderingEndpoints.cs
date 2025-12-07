@@ -6,7 +6,6 @@ using Ordering.Application.DTOs;
 using Ordering.Application.DTOs.Requests;
 using Ordering.Application.Handlers.Commands;
 using Ordering.Application.Handlers.Queries;
-using System.Reflection;
 
 namespace Ordering.AAPI.Endpoints;
 
@@ -32,11 +31,10 @@ public class OrderingEndpoints : ICarterModule
 
 
         // Get order by ID
-        group.MapGet("orders/{id:guid}", async (Guid orderId, ISender sender) =>
+        app.MapGet("orders/{orderId:guid}", async (Guid orderId, ISender sender) =>
         {
-            var result = await sender.Send(new GetOrdersQuery(orderId));
-
-            return Results.Ok(result.Orders);
+            var result = await sender.Send(new GetOrderByIdQuery(orderId));
+            return Results.Ok(result.Order);
         })
         .WithName("GetOrderById")
         .WithSummary("Get order details by ID")

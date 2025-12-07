@@ -17,16 +17,17 @@ public class OrderingRepository(OrderingDbContext dbContext)
         return createdOrder;
     }
 
-    public async Task<Order> GetOrderByIdAsync(CustomerId customerId, OrderId orderId, CancellationToken cancellationToken)
+    public async Task<Order> GetOrderByIdAsync(OrderId orderId, CancellationToken cancellationToken)
     {
-        return await dbContext.Orders.FindAsync(orderId, cancellationToken);
+        return await dbContext.Orders
+            .Include(o => o.OrderItems)
+            .FirstOrDefaultAsync(o => o.Id == orderId, cancellationToken);
     }
 
     public async Task<IEnumerable<Order>> GetOrdersAsync(CustomerId customerId, CancellationToken cancellationToken)
     {
         return await dbContext.Orders
             .AsNoTracking()
-            .Include(o => o.OrderItems)
             .Where(o => o.CustomerId == customerId)
             .ToListAsync(cancellationToken);
     }

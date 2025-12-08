@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Ordering.Domain.ValueObjects;
 
@@ -31,16 +32,19 @@ public class OrderNumber : ValueObject
     {
         // Format: ORD-YYYYMMDD-XXXXX
         var datePart = DateTime.UtcNow.ToString("yyyyMMdd");
-        var randomPart = GenerateRandomSequence(5);
+        var randomPart = GenerateRandomSequence();
         return new OrderNumber($"ORD-{datePart}-{randomPart}");
     }
 
-    private static string GenerateRandomSequence(int length)
+    private static string GenerateRandomSequence()
     {
-        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        // the pattern is a 5-digit string, padding with zeros  e.g., "00001", "04567"
+        const string pattern = "D5";
         var random = new Random();
-        return new string(Enumerable.Repeat(chars, length)
-            .Select(s => s[random.Next(s.Length)]).ToArray());
+        // Generate a number from 1 to 99999
+        int number = random.Next(1, 100000);
+
+        return number.ToString(pattern);
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

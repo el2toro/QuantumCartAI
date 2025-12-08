@@ -10,7 +10,6 @@ public record CreateOrderRequest
     public Guid CustomerId { get; init; }
     public AddressDto ShippingAddress { get; init; }
     public AddressDto BillingAddress { get; init; }
-    public string OrderNumber { get; init; }
     public string Currency { get; init; }
 
     // [Required]

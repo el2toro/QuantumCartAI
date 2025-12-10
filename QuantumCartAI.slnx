@@ -20,6 +20,10 @@
     <Project Path="Services/Catalog/Catalog.API/Catalog.API.csproj" Id="2bd79d17-7b77-4761-844b-f5e923df6ca4" />
     <Project Path="Services/Catalog/Catalog.Tests/Catalog.Tests.csproj" Id="ace2777f-88ad-4219-90c6-e58baca0a2f9" />
   </Folder>
+  <Folder Name="/Services/Chat/">
+    <Project Path="Services/Chat/Chat.API/Chat.API.csproj" Id="4a130453-1421-4664-abc5-8309afecb038" />
+  </Folder>
+  <Folder Name="/Services/Notification/" />
   <Folder Name="/Services/Ordering/">
     <Project Path="Services/Ordering/Ordering.API/Ordering.API.csproj" />
     <Project Path="Services/Ordering/Ordering.Application/Ordering.Application.csproj" Id="6c314394-9b09-4f48-a19a-c4201f32631d" />

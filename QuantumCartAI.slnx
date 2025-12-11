@@ -23,6 +23,9 @@
   <Folder Name="/Services/Chat/">
     <Project Path="Services/Chat/Chat.API/Chat.API.csproj" Id="4a130453-1421-4664-abc5-8309afecb038" />
   </Folder>
+  <Folder Name="/Services/Discount/">
+    <Project Path="Services/Discount/Discount.gRPC/Discount.gRPC.csproj" Id="d74ca3cd-b4a0-415c-9c7d-293549a4251d" />
+  </Folder>
   <Folder Name="/Services/Notification/" />
   <Folder Name="/Services/Ordering/">
     <Project Path="Services/Ordering/Ordering.API/Ordering.API.csproj" />

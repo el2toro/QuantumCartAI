@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-option csharp_namespace = "Discount.gRPC";
+option csharp_namespace = "DiscountService.gRPC";
 
 package discount;
 
 // The discount service definition.
-service Discount {
+service DiscountService {
   // Get discount for a product
   rpc GetDiscount (GetDiscountRequest) returns (DiscountResponse);
   
@@ -23,6 +23,9 @@ service Discount {
   
   // Get active discounts
   rpc GetActiveDiscounts (GetActiveDiscountsRequest) returns (DiscountListResponse);
+
+    // Get discount by coupon code
+  rpc GetDiscountByCoupon (CouponRequest) returns (DiscountResponse);
 }
 
 // Requests
@@ -70,6 +73,10 @@ message GetProductDiscountsRequest {
 message GetActiveDiscountsRequest {
   int32 page_number = 1;
   int32 page_size = 2;
+}
+
+message CouponRequest{
+    string coupon_code = 1;
 }
 
 // Responses

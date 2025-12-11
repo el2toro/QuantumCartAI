@@ -15,7 +15,7 @@ public class UpdateProductHandler(IProductRepository productRepository)
         productToBeUpdated.Name = command.Product.Name;
         productToBeUpdated.Description = command.Product.Description;
         productToBeUpdated.Price = command.Product.Price;
-        productToBeUpdated.ImageFile = command.Product.ImageFile;
+        productToBeUpdated.Image = command.Product.ImageFile;
         productToBeUpdated.IsAvailable = command.Product.IsAvailable;
         productToBeUpdated.Rating = command.Product.Rating;
         productToBeUpdated.UpdatedAt = DateTime.UtcNow;

@@ -1,0 +1,104 @@
+syntax = "proto3";
+
+option csharp_namespace = "Discount.gRPC";
+
+package discount;
+
+// The discount service definition.
+service Discount {
+  // Get discount for a product
+  rpc GetDiscount (GetDiscountRequest) returns (DiscountResponse);
+  
+  // Create a new discount
+  rpc CreateDiscount (CreateDiscountRequest) returns (DiscountResponse);
+  
+  // Update an existing discount
+  rpc UpdateDiscount (UpdateDiscountRequest) returns (DiscountResponse);
+  
+  // Delete a discount
+  rpc DeleteDiscount (DeleteDiscountRequest) returns (DeleteDiscountResponse);
+  
+  // Get all discounts for a product
+  rpc GetProductDiscounts (GetProductDiscountsRequest) returns (DiscountListResponse);
+  
+  // Get active discounts
+  rpc GetActiveDiscounts (GetActiveDiscountsRequest) returns (DiscountListResponse);
+}
+
+// Requests
+message GetDiscountRequest {
+  string discount_id = 1;
+}
+
+message CreateDiscountRequest {
+  string product_id = 1;
+  string product_name = 2;
+  string description = 3;
+  double amount = 4;
+  bool is_percentage = 5;
+  string start_date = 6;
+  string end_date = 7;
+  string coupon_code = 8;
+  int32 max_usage = 9;
+  int32 min_purchase_amount = 10;
+}
+
+message UpdateDiscountRequest {
+  string discount_id = 1;
+  string product_id = 2;
+  string product_name = 3;
+  string description = 4;
+  double amount = 5;
+  bool is_percentage = 6;
+  string start_date = 7;
+  string end_date = 8;
+  string coupon_code = 9;
+  int32 max_usage = 10;
+  int32 current_usage = 11;
+  int32 min_purchase_amount = 12;
+  bool is_active = 13;
+}
+
+message DeleteDiscountRequest {
+  string discount_id = 1;
+}
+
+message GetProductDiscountsRequest {
+  string product_id = 1;
+}
+
+message GetActiveDiscountsRequest {
+  int32 page_number = 1;
+  int32 page_size = 2;
+}
+
+// Responses
+message DiscountResponse {
+  string discount_id = 1;
+  string product_id = 2;
+  string product_name = 3;
+  string description = 4;
+  double amount = 5;
+  bool is_percentage = 6;
+  string start_date = 7;
+  string end_date = 8;
+  string coupon_code = 9;
+  int32 max_usage = 10;
+  int32 current_usage = 11;
+  int32 min_purchase_amount = 12;
+  bool is_active = 13;
+  string created_date = 14;
+  string modified_date = 15;
+}
+
+message DiscountListResponse {
+  repeated DiscountResponse discounts = 1;
+  int32 total_count = 2;
+  int32 page_number = 3;
+  int32 page_size = 4;
+}
+
+message DeleteDiscountResponse {
+  bool success = 1;
+  string message = 2;
+}

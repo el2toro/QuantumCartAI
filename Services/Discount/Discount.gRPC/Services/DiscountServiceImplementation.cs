@@ -1,13 +1,15 @@
 ﻿using Discount.gRPC.Repositories;
+using DiscountService.gRPC;
 using Grpc.Core;
+using static DiscountService.gRPC.DiscountService;
 
 namespace Discount.gRPC.Services;
 
-public class DiscountService : Discount.DiscountBase
+public class DiscountServiceImplementation : DiscountServiceBase
 {
-    private readonly ILogger<DiscountService> _logger;
+    private readonly ILogger<DiscountServiceImplementation> _logger;
     private readonly IDiscountRepository _repository;
-    public DiscountService(ILogger<DiscountService> logger, IDiscountRepository discountRepository)
+    public DiscountServiceImplementation(ILogger<DiscountServiceImplementation> logger, IDiscountRepository discountRepository)
     {
         _logger = logger;
         _repository = discountRepository;
@@ -129,6 +131,18 @@ public class DiscountService : Discount.DiscountBase
         reply.PageSize = pageSize;
 
         return reply;
+    }
+
+    public async override Task<DiscountResponse> GetDiscountByCoupon(CouponRequest request, ServerCallContext context)
+    {
+        _logger.LogInformation("Getting discount with ID: {DiscountId}", request.CouponCode);
+
+        var discount = await _repository.GetByCouponCodeAsync(request.CouponCode);
+
+        if (discount is not null)
+            throw new RpcException(new Status(StatusCode.NotFound, $"Discount with CouponCode {request.CouponCode} not found"));
+
+        return MapToDiscountResponse(discount);
     }
 
     private DiscountResponse MapToDiscountResponse(Models.Discount discount)

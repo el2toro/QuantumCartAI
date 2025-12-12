@@ -1,4 +1,5 @@
-﻿using Cart.Application.Handlers.Commands;
+﻿using Cart.API.Session;
+using Cart.Application.Handlers.Commands;
 using Cart.Application.Handlers.Queries;
 using Cart.Domain.ValueObjects;
 
@@ -7,6 +8,7 @@ namespace Cart.API.Endpoints;
 public class CartEndpoints : ICarterModule
 {
     public record AddItemRequest(Guid? CustomerId, Guid? CartId, Guid ProductId, int Quantity, Currency Currency);
+    public record UpdateProductQuantityRequest(Guid? CustomerId, Guid? CartId, Guid ProductId, int Quantity);
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet("cart/{customerId}", async (Guid customerId, ISender sender) =>
@@ -19,9 +21,10 @@ public class CartEndpoints : ICarterModule
         .WithSummary("Get Cart By CustomerId")
         .Produces(StatusCodes.Status200OK);
 
-        app.MapPost("cart", async (AddItemRequest request, ISender sender) =>
+        app.MapPost("cart/item", async (AddItemRequest request, CurrentSession currentSession, ISender sender) =>
         {
             var command = request.Adapt<AddItemCommand>();
+
             var response = await sender.Send(command);
 
             return Results.Ok(response.Cart);
@@ -43,9 +46,10 @@ public class CartEndpoints : ICarterModule
             return Results.Ok();
         });
 
-        app.MapPut("cart/{cartId}/items/{productId}/quantity", (int quantity, ISender sender) =>
+        app.MapPut("cart/{cartId}/items/{productId}/quantity",
+            async (UpdateProductQuantityRequest request, ISender sender) =>
         {
-            // Implementation to get cart by customerId
+            var result = await sender.Send();
             return Results.Ok();
         });
 

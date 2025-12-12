@@ -13,7 +13,9 @@ public class CartRepository(IDistributedCache distributedCache) : ICartRepositor
 
         return string.IsNullOrWhiteSpace(cartString)
              ? JsonSerializer.Deserialize<Domain.Entities.Cart>(cartString!)
-             : new Domain.Entities.Cart(CartId.From(Guid.Empty.ToString()), Currency.None);
+             : new Domain.Entities.Cart(CartId.From(Guid.Empty.ToString()),
+             CustomerId.From(Guid.Empty.ToString()),
+             Currency.None);
     }
 
     public async Task SaveAsync(Domain.Entities.Cart cart)

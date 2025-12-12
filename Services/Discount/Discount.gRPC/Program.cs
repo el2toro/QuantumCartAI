@@ -17,7 +17,7 @@ builder.Services.AddDbContext<DiscountDbContext>(config =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.MapGrpcService<DiscountService>();
+app.MapGrpcService<DiscountServiceImplementation>();
 
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client");
 

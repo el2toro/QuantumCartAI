@@ -23,10 +23,11 @@ public class Cart : AggregateRoot
     public Currency Currency { get; private set; }
 
     // New cart
-    public Cart(CartId cartId, Currency currency) : base(cartId.Value)
+    public Cart(CartId cartId, CustomerId customerId, Currency currency) : base(cartId.Value)
     {
         Currency = currency;
         ShippingCost = Money.Zero(currency);
+        CustomerId = customerId;
     }
 
     public void AddItem(ProductId productId, Quantity requestedQty, Money unitPrice)

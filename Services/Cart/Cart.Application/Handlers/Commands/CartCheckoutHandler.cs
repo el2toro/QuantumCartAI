@@ -5,7 +5,7 @@ namespace Cart.Application.Handlers.Commands;
 
 public record CartCheckoutCommand(Guid CartId) : ICommand<CartCheckoutResult>;
 public record CartCheckoutResult();
-internal class CartCheckoutHandler(ICartRepository cartRepository) : ICommandHandler<CartCheckoutCommand, CartCheckoutResult>
+public class CartCheckoutHandler(ICartRepository cartRepository) : ICommandHandler<CartCheckoutCommand, CartCheckoutResult>
 {
     public async Task<CartCheckoutResult> Handle(CartCheckoutCommand command, CancellationToken cancellationToken)
     {

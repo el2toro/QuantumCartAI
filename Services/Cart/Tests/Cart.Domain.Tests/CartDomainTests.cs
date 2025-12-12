@@ -17,7 +17,7 @@ namespace Cart.Domain.Tests
             int expectedProductQuantity,
             int itemCount)
         {
-            var cart = new Entities.Cart(CartId.New(), currency);
+            var cart = new Entities.Cart(CartId.New(), CustomerId.New(), currency);
 
             cart.AddItem(ProductId.New(), Quantity.From(productQuantity), new Money(price, currency));
             // cart.ShippingCost.

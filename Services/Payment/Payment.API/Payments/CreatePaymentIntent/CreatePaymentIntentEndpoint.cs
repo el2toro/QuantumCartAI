@@ -1,6 +1,5 @@
-﻿namespace Payment.API.Payments.CreatePaymentIntent
+﻿namespace Payment.API.Payments.CreatePaymentIntent;
+
+public class CreatePaymentIntentEndpoint
 {
-    public class CreatePaymentIntentEndpoint
-    {
-    }
 }

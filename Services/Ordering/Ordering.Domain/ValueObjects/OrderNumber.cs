@@ -1,4 +1,4 @@
-﻿using System.Text;
+﻿using SharedKernel.ValueObjects;
 using System.Text.RegularExpressions;
 
 namespace Ordering.Domain.ValueObjects;

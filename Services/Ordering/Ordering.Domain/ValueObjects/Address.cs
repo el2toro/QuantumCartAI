@@ -1,4 +1,6 @@
-﻿namespace Ordering.Domain.ValueObjects;
+﻿using SharedKernel.ValueObjects;
+
+namespace Ordering.Domain.ValueObjects;
 
 public sealed class Address : ValueObject
 {

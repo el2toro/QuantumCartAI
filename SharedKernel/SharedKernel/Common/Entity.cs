@@ -1,4 +1,4 @@
-﻿namespace Ordering.Domain.Common;
+﻿namespace SharedKernel.Common;
 
 public abstract class Entity<TId> : IEquatable<Entity<TId>>
     where TId : notnull
@@ -112,5 +112,3 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
         return (Entity<TId>)MemberwiseClone();
     }
 }
-
-

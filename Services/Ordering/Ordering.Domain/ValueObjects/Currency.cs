@@ -1,4 +1,4 @@
-﻿using Ordering.Domain.ValueObjects;
+﻿using SharedKernel.ValueObjects;
 using System.Collections.ObjectModel;
 using System.Globalization;
 

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Ordering.Domain.Common;
+namespace SharedKernel.Common;
 
 public interface IDomainEvent : INotification
 {

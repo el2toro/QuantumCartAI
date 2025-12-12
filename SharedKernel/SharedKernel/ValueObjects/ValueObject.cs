@@ -1,4 +1,4 @@
-﻿namespace Ordering.Domain.ValueObjects;
+﻿namespace SharedKernel.ValueObjects;
 
 public abstract class ValueObject : IEquatable<ValueObject>
 {

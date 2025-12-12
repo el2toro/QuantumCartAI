@@ -1,4 +1,4 @@
-﻿namespace Ordering.Domain.Common;
+﻿namespace SharedKernel.Common;
 
 public interface IAggregateRoot
 {

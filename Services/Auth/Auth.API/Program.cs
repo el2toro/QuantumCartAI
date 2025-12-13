@@ -1,9 +1,7 @@
-using Auth.API.Models;
 using Auth.API.Services;
+using Carter;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,8 +27,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddAuthorization();
-builder.Services.AddAuthorization();
+//builder.Services.AddAuthorization();
+//builder.Services.AddAuthorization();
 
 const string corsPolicy = "luxe-eccomerce-policy";
 builder.Services.AddCors(options =>
@@ -45,37 +43,19 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddCarter();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
 app.UseCors(corsPolicy);
-app.UseAuthentication();
-app.UseAuthorization();
+//app.UseAuthentication();
+//app.UseAuthorization();
 // Seed users
 app.Services.GetRequiredService<IUserService>().Seed();
 
-// Login endpoint
-app.MapPost("/auth/login", (LoginRequest req,
-                            IUserService users,
-                            ITokenService tokens) =>
-{
-    var user = users.ValidateUser(req.Username, req.Password);
-    if (user is null)
-        return Results.Unauthorized();
 
-    var access = tokens.GenerateAccessToken(user);
-    var refresh = tokens.GenerateRefreshToken();
-
-    return Results.Ok(new AuthResponse(access, refresh));
-});
-
-// Protected test endpoint
-app.MapGet("/auth/me", (ClaimsPrincipal user) =>
-{
-    var username = user.Identity!.Name;
-    return Results.Ok(new { username });
-}).RequireAuthorization();
+app.MapCarter();
 
 app.Run();

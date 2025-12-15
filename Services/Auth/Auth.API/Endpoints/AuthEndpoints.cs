@@ -2,11 +2,14 @@
 using Auth.API.Models;
 using Auth.API.Services;
 using Carter;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Auth.API.Endpoints;
 
 public class AuthEndpoints : ICarterModule
 {
+    public record ConfirmEmailRequest(string Email);
+    public record ResetPasswordRequest(string Email);
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapPost("/auth/login", (AuthRequest req,
@@ -27,12 +30,17 @@ public class AuthEndpoints : ICarterModule
 
         app.MapPost("auth/signup", (SignupRequest request) =>
         {
-
+            return Results.Ok();
         });
 
-        app.MapPost("auth/reset-password", (string email) =>
+        app.MapPost("auth/confirm-email", (ConfirmEmailRequest request) =>
         {
+            return Results.Ok();
+        });
 
+        app.MapPost("auth/reset-password", (ResetPasswordRequest request) =>
+        {
+            return Results.Ok();
         });
     }
 }

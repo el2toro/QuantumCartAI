@@ -1,3 +1,5 @@
-﻿namespace Auth.API.Models;
+﻿using Auth.API.DTOs;
 
-public record AuthResponse(string AccessToken, string RefreshToken);
+namespace Auth.API.Models;
+
+public record AuthResponse(string AccessToken, string RefreshToken, UserDto User);

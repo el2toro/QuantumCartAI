@@ -2,13 +2,13 @@
 
 public interface IMessageRepository
 {
-    Task SendMessage(string message, CancellationToken cancellationToken);
+    Task<string> SendMessage(string message, CancellationToken cancellationToken);
 }
 
 public class MessageRepository : IMessageRepository
 {
-    public Task SendMessage(string message, CancellationToken cancellationToken)
+    public async Task<string> SendMessage(string message, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return await Task.FromResult(message);
     }
 }

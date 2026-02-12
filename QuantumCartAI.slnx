@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/ApiGateway/">
+    <Project Path="ApiGateway/YarpApiGateway/YarpApiGateway.csproj" Id="82e1b5e0-7b68-411a-8fb6-748aa1e187f3" />
+  </Folder>
   <Folder Name="/BuildingBlocks/">
     <Project Path="Services/BuildingBlocks/BuildingBlocks.Messaging/BuildingBlocks.Messaging.csproj" Id="4da13913-4684-4034-8819-b104f3ee4e99" />
     <Project Path="Services/BuildingBlocks/BuildingBlocks/BuildingBlocks.csproj" Id="d9dda618-aab6-41c7-9d49-0bc2a1007088" />
@@ -18,7 +21,6 @@
   </Folder>
   <Folder Name="/Services/Catalog/">
     <Project Path="Services/Catalog/Catalog.API/Catalog.API.csproj" Id="2bd79d17-7b77-4761-844b-f5e923df6ca4" />
-    <Project Path="Services/Catalog/Catalog.Tests/Catalog.Tests.csproj" Id="ace2777f-88ad-4219-90c6-e58baca0a2f9" />
   </Folder>
   <Folder Name="/Services/Chat/">
     <Project Path="Services/Chat/Chat.API/Chat.API.csproj" Id="4a130453-1421-4664-abc5-8309afecb038" />
@@ -36,8 +38,9 @@
   <Folder Name="/Services/Payment/">
     <Project Path="Services/Payment/Payment.API/Payment.API.csproj" Id="5eda3056-7945-4261-afd3-7b91e0f64cdf" />
   </Folder>
-  <Folder Name="/SharedKernel/">
-    <Project Path="SharedKernel/SharedKernel/SharedKernel.csproj" Id="0b13930e-4836-48e8-a51b-d167cf9e51d8" />
+  <Folder Name="/Shared/">
+    <Project Path="Shared/QuantumCartAI.Infrastructure.AspNetCore/QuantumCartAI.Shared.Infrastructure.AspNetCore.csproj" Id="208e4e82-e0d1-409b-9eb7-2e708e167950" />
+    <Project Path="Shared/SharedKernel/SharedKernel.csproj" />
   </Folder>
   <Project Path="docker-compose.dcproj">
     <Build />

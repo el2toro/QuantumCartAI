@@ -42,4 +42,21 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
 
         return updatedProduct;
     }
+
+    public async Task<bool> UpdateStock(Guid productId, int quantity, CancellationToken cancellationToken)
+    {
+        var product = await dbContext.Products.FirstOrDefaultAsync(p => p.Id == productId);
+
+        if (product is null) return false;
+
+        if (product.Quantity >= quantity)
+            product.Quantity = product.Quantity - quantity;
+
+        if (product.Quantity - quantity <= 0)
+            product.Quantity = 0;
+
+        await dbContext.SaveChangesAsync();
+
+        return true;
+    }
 }

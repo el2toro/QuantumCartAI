@@ -19,7 +19,8 @@ public class UserService : IUserService
             _users.Add(new User
             {
                 Username = "admin",
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("12345")
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("12345"),
+                Email = "test@test.com"
             });
         }
     }
@@ -33,5 +34,19 @@ public class UserService : IUserService
             return null;
 
         return user;
+    }
+
+    public bool EmailExists(string email)
+    {
+        return _users.Any(u => u.Email == email);
+    }
+
+    public void ResetPassword(string email, string newPassword)
+    {
+        var user = _users.FirstOrDefault(u => u.Email == email);
+        if (user != null)
+        {
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        }
     }
 }

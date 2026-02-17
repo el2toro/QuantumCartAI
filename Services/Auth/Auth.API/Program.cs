@@ -7,8 +7,20 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddSingleton<IUserService, UserService>();
-builder.Services.AddSingleton<ITokenService, TokenService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+
+const string corsPolicy = "luxe-ecommerce-policy";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: corsPolicy, policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+
+    });
+});
 
 // JWT Authentication
 var jwtKey = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!);
@@ -27,34 +39,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-//builder.Services.AddAuthorization();
-//builder.Services.AddAuthorization();
-
-const string corsPolicy = "luxe-eccomerce-policy";
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: corsPolicy, policy =>
-    {
-        policy
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials()     // needed if sending cookies or Authorization headers
-            .SetIsOriginAllowed(origin => true); // allow all origins (unsafe for prod, adjust below)
-    });
-});
+builder.Services.AddAuthorization();
 
 builder.Services.AddCarter();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-
 app.UseCors(corsPolicy);
-//app.UseAuthentication();
-//app.UseAuthorization();
-// Seed users
-app.Services.GetRequiredService<IUserService>().Seed();
-
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapCarter();
 

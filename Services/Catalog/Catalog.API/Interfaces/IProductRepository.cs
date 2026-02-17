@@ -8,4 +8,5 @@ public interface IProductRepository
     Task<Product> CreateProduct(Product product, CancellationToken cancellationToken);
     Task<Product> UpdateProduct(Product product, CancellationToken cancellationToken);
     Task DeleteProduct(Product product, CancellationToken cancellationToken);
+    Task<bool> UpdateStock(Guid productId, int quantity, CancellationToken cancellationToken);
 }

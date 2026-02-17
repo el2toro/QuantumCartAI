@@ -13,4 +13,12 @@ public class CatalogGrpcServiceClient(CatalogQueryService.CatalogQueryServiceCli
 
         return new ProductQueryDto(response.ProductExists);
     }
+
+    public async Task<bool> UpdateStock(Guid productId, int quantity)
+    {
+        var request = new CatalogStockUpdateRequest { Id = productId.ToString(), Quantity = quantity };
+        var response = await catalogQueryServiceClient.UpdateStockAsync(request);
+
+        return response.StockUpdated;
+    }
 }

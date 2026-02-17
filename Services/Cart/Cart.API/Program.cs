@@ -1,7 +1,5 @@
 using BuildingBlocks.Messaging.MassTransit;
-using Cart.API.Middleware;
 using Cart.API.Services;
-using Cart.API.Session;
 using Cart.Application.Handlers.Commands;
 using Cart.Application.Handlers.Events;
 using Cart.Application.Handlers.Queries;
@@ -9,18 +7,40 @@ using Cart.Application.Interfaces;
 using Cart.Domain.Interfaces;
 using Cart.Infrastructure.Repositories;
 using Catalog.gRPC;
+using QuantumCartAI.Shared.Infrastructure.AspNetCore.Session;
 using System.Reflection;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using static DiscountService.gRPC.DiscountService;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 //Add services to the container.
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<CurrentSession>();
-
 builder.Services.AddScoped<ICatalogGrpcService, CatalogGrpcServiceClient>();
 builder.Services.AddScoped<IDiscountGrpcService, DiscountGrpcServiceClient>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<CurrentSession>();
+
+// JWT Authentication
+var jwtKey = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(jwtKey)
+        };
+    });
+builder.Services.AddAuthorization();
 
 builder.Services.AddCarter();
 
@@ -79,24 +99,11 @@ builder.Services.AddGrpcClient<DiscountServiceClient>(options =>
     return handler;
 });
 
-const string corsPolicy = "luxe-eccomerce-policy";
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: corsPolicy, policy =>
-    {
-        policy
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials()     // needed if sending cookies or Authorization headers
-            .SetIsOriginAllowed(origin => true); // allow all origins (unsafe for prod, adjust below)
-    });
-});
-
 var app = builder.Build();
 
-app.UseAnonymousSession();
-app.UseCors(corsPolicy);
 // Configure the HTTP request pipeline.
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapCarter();
 
 app.Run();

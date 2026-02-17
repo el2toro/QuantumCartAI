@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.CQRS;
 using Cart.Application.Dtos;
+using Cart.Domain.ValueObjects;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace Cart.Application.Handlers.Commands;
@@ -13,7 +14,7 @@ public class UpdateProductQuantityHandler(IDistributedCache distributedCache)
     public async Task<UpdateProductQuantityResult> Handle(UpdateProductQuantityCommand command, CancellationToken cancellationToken)
     {
         var cart = await distributedCache.GetStringAsync(command.CustomerId.ToString()!, cancellationToken);
-        return new UpdateProductQuantityResult(new CartDto());
+        return new UpdateProductQuantityResult(new CartDto(Guid.NewGuid(), Guid.NewGuid(), new List<CartItemDto>(), 0, 0));
     }
 }
 

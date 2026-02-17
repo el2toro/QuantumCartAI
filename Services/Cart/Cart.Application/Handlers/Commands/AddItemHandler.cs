@@ -6,41 +6,48 @@ using Cart.Domain.Events;
 using Cart.Application.Dtos;
 using BuildingBlocks.CQRS;
 using Cart.Application.Interfaces;
+using QuantumCartAI.Shared.Infrastructure.AspNetCore.Session;
 
 namespace Cart.Application.Handlers.Commands;
 
-
-public record AddItemCommand(Guid? CustomerId, Guid? CartId, Guid ProductId, int Quantity, Currency Currency) : ICommand<AddItemResult>;
+public record AddItemCommand(Guid? CustomerId, Guid? CartId, Guid ProductId, int Quantity, decimal Price, Currency Currency) : ICommand<AddItemResult>;
 public record AddItemResult(CartDto Cart);
 
 public class AddItemHandler(IDistributedCache distributedCache,
-    IPublishEndpoint publisher, ICatalogGrpcService catalogGrpcService)
+    IPublishEndpoint publisher,
+    ICatalogGrpcService catalogGrpcService,
+    IDiscountGrpcService discountGrpcService,
+    CurrentSession currentSession)
     : ICommandHandler<AddItemCommand, AddItemResult>
 {
     public async Task<AddItemResult> Handle(AddItemCommand command, CancellationToken cancellationToken)
     {
-        // Create a cart instance if CustomerId/CartId is not provided       
-        var cart = command.CustomerId.HasValue
-             ? await GetCachedCart(command.CustomerId.ToString()!, command.Currency)
-             : CreateNewCart(CustomerId.From(command.CustomerId.ToString()!), command.Currency);
+        var sessionId = currentSession.IsAuthenticated
+                      ? currentSession.AuthenticatedUserId
+                      : currentSession.AnonymousId;
+
+        // Create a cart instance if CustomerId/CartId is not provided
+        CustomerId customerId = CustomerId.From(sessionId.ToString()!);
+        var cart = await GetCachedCart(customerId, command.Currency)
+                 ?? CreateNewCart(customerId, command.Currency);
 
         // 1. Validate ProductId (calling CatalogService)
-        //var productQuery = await catalogGrpcService.GetProduct(command.ProductId);
+        var productInStock = await catalogGrpcService.GetProduct(command.ProductId);
 
-        //if (!productQuery.ProductExists)
-        //{
-        //    return new AddItemResult(new CartDto());
-        //}
+        // 2. Call Pricing Service to get current price (applied Discount)
+        // 
+        // var discounts = await discountGrpcService.GetProductDiscounts(command.ProductId);
 
-        // 3. Add item to domain aggregate
-        cart.AddItem(
+        if (productInStock.ProductExists)
+        {
+            // 3. Add item to domain aggregate
+            cart.AddItem(
             ProductId.From(command.ProductId.ToString()),
             Quantity.From(command.Quantity),
-            new Money(50));
+            new Money(command.Price));
+        }
 
         var cartDto = CreateCartDto(cart);
-
-        // 2. Call Pricing Service to get current price (applied Discount)        
 
         // 4. Save the cart (Redis/Mongo/etc.)
         await CacheCartDto(cartDto);
@@ -54,10 +61,16 @@ public class AddItemHandler(IDistributedCache distributedCache,
         return new AddItemResult(cartDto);
     }
 
-    private async Task<Domain.Entities.Cart> GetCachedCart(string cartId, Currency currency)
+    private async Task<Domain.Entities.Cart?> GetCachedCart(CustomerId customerId, Currency currency)
     {
-        var cachedCartJson = await distributedCache.GetStringAsync(cartId);
-        var cartDto = JsonSerializer.Deserialize<CartDto>(cachedCartJson!)!;
+        string? cachedCartJson = await distributedCache.GetStringAsync(customerId.Value.ToString());
+
+        if (string.IsNullOrEmpty(cachedCartJson))
+        {
+            return null;
+        }
+
+        var cartDto = JsonSerializer.Deserialize<CartDto>(cachedCartJson)!;
         var cart = new Domain.Entities.Cart(CartId.From(cartDto.Id.ToString()),
             CustomerId.From(cartDto.CustomerId.ToString()!),
             currency);
@@ -75,21 +88,9 @@ public class AddItemHandler(IDistributedCache distributedCache,
     private CartDto CreateCartDto(Domain.Entities.Cart cart)
     {
         var cartItems = cart.Items.Select(item =>
-        new CartItemDto
-        {
-            ProductId = item.ProductId.Value,
-            Quantity = item.Quantity.Value,
-            DiscountedPrice = item.UnitPrice.Amount,
-            Price = item.UnitPrice.Amount
-        });
+        new CartItemDto(item.ProductId.Value, item.Quantity.Value, item.UnitPrice.Amount, item.UnitPrice.Amount));
 
-        return new CartDto
-        {
-            Id = cart.Id,
-            CustomerId = cart.CustomerId?.Value,
-            CartItems = cartItems,
-            Subtotal = cart.Subtotal.Amount
-        };
+        return new CartDto(cart.Id, cart.CustomerId?.Value, cartItems, cart.Subtotal.Amount, cart.Subtotal.Amount);
     }
 
     private Domain.Entities.Cart CreateNewCart(CustomerId customerId, Currency currency)
@@ -104,7 +105,7 @@ public class AddItemHandler(IDistributedCache distributedCache,
             JsonSerializer.Serialize(cartDto),
             new DistributedCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(5),
             });
     }
 }

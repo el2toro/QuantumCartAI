@@ -1,13 +1,13 @@
-﻿using Cart.API.Session;
-using Cart.Application.Handlers.Commands;
+﻿using Cart.Application.Handlers.Commands;
 using Cart.Application.Handlers.Queries;
 using Cart.Domain.ValueObjects;
+using QuantumCartAI.Shared.Infrastructure.AspNetCore.Session;
 
 namespace Cart.API.Endpoints;
 
 public class CartEndpoints : ICarterModule
 {
-    public record AddItemRequest(Guid? CustomerId, Guid? CartId, Guid ProductId, int Quantity, Currency Currency);
+    public record AddItemRequest(Guid? CustomerId, Guid? CartId, Guid ProductId, int Quantity, decimal Price, Currency Currency);
     public record UpdateProductQuantityRequest(Guid? CustomerId, Guid? CartId, Guid ProductId, int Quantity);
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -49,7 +49,7 @@ public class CartEndpoints : ICarterModule
         app.MapPut("cart/{cartId}/items/{productId}/quantity",
             async (UpdateProductQuantityRequest request, ISender sender) =>
         {
-            var result = await sender.Send();
+            //var result = await sender.Send();
             return Results.Ok();
         });
 

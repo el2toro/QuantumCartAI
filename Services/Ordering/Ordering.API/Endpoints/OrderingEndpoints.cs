@@ -7,7 +7,7 @@ using Ordering.Application.DTOs.Requests;
 using Ordering.Application.Handlers.Commands;
 using Ordering.Application.Handlers.Queries;
 
-namespace Ordering.AAPI.Endpoints;
+namespace Ordering.API.Endpoints;
 
 public class OrderingEndpoints : ICarterModule
 {

@@ -1,5 +1,4 @@
-﻿using Catalog.API.Interfaces;
-using Catalog.gRPC;
+﻿using Catalog.gRPC;
 using Grpc.Core;
 
 namespace Catalog.API.Services;
@@ -11,8 +10,14 @@ public class CatalogGrpcService(IProductRepository productRepository)
     {
         var product = await productRepository.GetProductById(Guid.Parse(request.Id), CancellationToken.None);
 
-        bool productExists = product is not null;
+        bool productInStock = product is not null && product.Quantity > 0;
 
-        return new CatalogQueryResponse() { ProductExists = productExists };
+        return new CatalogQueryResponse() { ProductExists = productInStock };
+    }
+
+    public override async Task<CatalogStockUpdateResponse> UpdateStock(CatalogStockUpdateRequest request, ServerCallContext context)
+    {
+        bool stockUpdated = await productRepository.UpdateStock(Guid.Parse(request.Id), request.Quantity, CancellationToken.None);
+        return new CatalogStockUpdateResponse() { StockUpdated = stockUpdated };
     }
 }

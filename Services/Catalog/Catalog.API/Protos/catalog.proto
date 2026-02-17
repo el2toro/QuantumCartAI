@@ -6,6 +6,8 @@ option csharp_namespace = "Catalog.gRPC";
 
 service CatalogQueryService {
   rpc GetProduct (CatalogQueryRequest) returns (CatalogQueryResponse);
+
+  rpc UpdateStock (CatalogStockUpdateRequest) returns (CatalogStockUpdateResponse);
 }
 
 message CatalogQueryRequest {
@@ -14,4 +16,13 @@ message CatalogQueryRequest {
 
 message CatalogQueryResponse {
   bool productExists = 1;
+}
+
+message CatalogStockUpdateRequest {
+  string id = 1;
+  int32 quantity = 2;
+}
+
+message CatalogStockUpdateResponse {
+  bool stockUpdated = 1;
 }

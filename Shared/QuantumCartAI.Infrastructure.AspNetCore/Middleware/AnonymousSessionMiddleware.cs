@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using QuantumCartAI.Shared.Infrastructure.AspNetCore.Extensions;
 
 namespace QuantumCartAI.Shared.Infrastructure.AspNetCore.Middleware;
 
@@ -15,36 +17,58 @@ public class AnonymousSessionMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        var anonId = context.Request.Cookies[AnonymousCookieName];
+        var anonIdStr = context.Request.Cookies[AnonymousCookieName];
 
-        // 1. If cookie exists and is valid GUID → attach to HttpContext
-        if (!string.IsNullOrWhiteSpace(anonId) && Guid.TryParse(anonId, out var guid))
+        Guid? anonId = null;
+
+        if (!string.IsNullOrWhiteSpace(anonIdStr) && Guid.TryParse(anonIdStr, out var parsed))
         {
-            context.Items["AnonymousUserId"] = guid;
+            anonId = parsed;
+        }
+
+        // ── New logic ──
+        var isAuthenticated = context.User?.Identity?.IsAuthenticated == true;
+
+        if (isAuthenticated)
+        {
+            var userId = context.User.GetUserId();
+            if (userId.HasValue)
+            {
+                context.Items["CurrentPrincipalId"] = userId.Value;
+                context.Items["IsAnonymous"] = false;
+                // Optional: context.Items["UserId"] = userId.Value;  // legacy name if needed
+            }
+            else
+            {
+                // Rare – token valid but no sub claim → log & treat as anon or reject
+                context.Items["IsAnonymous"] = true;
+            }
+        }
+        else if (anonId.HasValue)
+        {
+            context.Items["CurrentPrincipalId"] = anonId.Value;
+            context.Items["IsAnonymous"] = true;
         }
         else
         {
-            // 2. No cookie or invalid → create new anonymous session
-            guid = Guid.NewGuid();
+            // Guest + no cookie → create
+            anonId = Guid.NewGuid();
 
-            context.Items["AnonymousUserId"] = guid;
-
-            // Set HttpOnly, Secure, SameSite=Strict cookie
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,                              // forces HTTPS
-                SameSite = SameSiteMode.Strict,
+                Secure = true, // helper extension
+                SameSite = SameSiteMode.Lax,                 // ← usually better than Strict
                 Path = "/",
-                Expires = DateTimeOffset.UtcNow.AddDays(CookieDays),
-                IsEssential = true                          // GDPR: still works when user rejects non-essential cookies
+                Expires = DateTimeOffset.UtcNow.AddDays(CookieDays), // longer is better
+                IsEssential = true
             };
 
-            context.Response.Cookies.Append(AnonymousCookieName, guid.ToString(), cookieOptions);
-        }
+            context.Response.Cookies.Append(AnonymousCookieName, anonId.Value.ToString(), cookieOptions);
 
-        // Optional: sliding expiration – refresh TTL in Redis on every request
-        // We do this in CartService/AIRecommendationService, not here
+            context.Items["CurrentPrincipalId"] = anonId.Value;
+            context.Items["IsAnonymous"] = true;
+        }
 
         await _next(context);
     }

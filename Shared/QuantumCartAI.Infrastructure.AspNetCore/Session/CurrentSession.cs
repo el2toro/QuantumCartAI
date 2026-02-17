@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace QuantumCartAI.Shared.Infrastructure.AspNetCore.Session;
 
@@ -15,21 +16,31 @@ public class CurrentSession
     {
         get
         {
-            var id = _accessor.HttpContext?.Items["AnonymousUserId"] as Guid?;
-            return id ?? throw new InvalidOperationException("No anonymous session found in current context");
+            string? anonymousId = _accessor.HttpContext?.Request?.Headers?["X-Anonymous-Id"]
+                                  ?? throw new InvalidOperationException("No anonymous session found in current context");
+
+            Guid.TryParse(anonymousId, out Guid id);
+
+            return id;
         }
     }
 
     public Guid? AuthenticatedUserId
     {
-        get => _accessor.HttpContext?.User?.FindFirst("sub")?.Value is string sub ? Guid.Parse(sub) : null;
-        // or use ClaimTypes.NameIdentifier depending on your token structure
+
+        get
+        {
+            string? userId = _accessor.HttpContext?.User?.Identity?.IsAuthenticated == true
+                             ? _accessor.HttpContext?.User.Claims.FirstOrDefault()?.Value
+                             : null;
+
+            return userId is not null
+                ? Guid.Parse(userId)
+                : null;
+        }
     }
 
     public bool IsAnonymous => AuthenticatedUserId == null;
 
     public bool IsAuthenticated => !IsAnonymous;
-
-    // Optional: convenience properties
-    public bool HasAnonymousSession => _accessor.HttpContext?.Items.ContainsKey("AnonymousUserId") == true;
 }

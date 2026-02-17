@@ -11,7 +11,7 @@ builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 
 builder.Services.AddDbContext<DiscountDbContext>(config =>
 {
-    config.UseSqlServer(builder.Configuration.GetConnectionString("Database")!);
+    config.UseNpgsql(builder.Configuration.GetConnectionString("Database"));
 });
 
 var app = builder.Build();

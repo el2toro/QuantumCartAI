@@ -1,4 +1,4 @@
 ﻿namespace Cart.Application.Dtos;
 
-public record ProductQueryDto(bool ProductExists);
+public record ProductQueryDto(Guid ProductId, int Quantity, decimal Price);
 

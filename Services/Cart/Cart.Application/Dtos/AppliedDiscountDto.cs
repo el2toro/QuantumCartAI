@@ -2,7 +2,7 @@
 
 public record AppliedDiscountDto(
     string DiscountId,
-    double Amount,
+    int Amount,
     bool IsPercentage,
     string CouponCode
 );

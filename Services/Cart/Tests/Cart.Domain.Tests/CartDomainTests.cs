@@ -19,7 +19,7 @@ namespace Cart.Domain.Tests
         {
             var cart = new Entities.Cart(CartId.New(), CustomerId.New(), currency);
 
-            cart.AddItem(ProductId.New(), Quantity.From(productQuantity), new Money(price, currency));
+            cart.AddItem(ProductId.New(), Quantity.From(productQuantity), new Money(price, currency), new Money(price, currency));
             // cart.ShippingCost.
 
             Assert.NotEmpty(cart.Items);

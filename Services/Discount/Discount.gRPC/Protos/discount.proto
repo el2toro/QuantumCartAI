@@ -37,7 +37,7 @@ message CreateDiscountRequest {
   string product_id = 1;
   string product_name = 2;
   string description = 3;
-  double amount = 4;
+  int32 amount = 4;
   bool is_percentage = 5;
   string start_date = 6;
   string end_date = 7;
@@ -51,7 +51,7 @@ message UpdateDiscountRequest {
   string product_id = 2;
   string product_name = 3;
   string description = 4;
-  double amount = 5;
+  int32 amount = 5;
   bool is_percentage = 6;
   string start_date = 7;
   string end_date = 8;
@@ -85,7 +85,7 @@ message DiscountResponse {
   string product_id = 2;
   string product_name = 3;
   string description = 4;
-  double amount = 5;
+  int32 amount = 5;
   bool is_percentage = 6;
   string start_date = 7;
   string end_date = 8;

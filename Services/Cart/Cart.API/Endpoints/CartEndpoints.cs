@@ -1,14 +1,12 @@
 ﻿using Cart.Application.Handlers.Commands;
 using Cart.Application.Handlers.Queries;
 using Cart.Domain.ValueObjects;
-using QuantumCartAI.Shared.Infrastructure.AspNetCore.Session;
 
 namespace Cart.API.Endpoints;
 
 public class CartEndpoints : ICarterModule
 {
-    public record AddItemRequest(Guid? CustomerId, Guid? CartId, Guid ProductId, int Quantity, decimal Price, Currency Currency);
-    public record UpdateProductQuantityRequest(Guid? CustomerId, Guid? CartId, Guid ProductId, int Quantity);
+    public record CartItemRequest(Guid? CustomerId, Guid? CartId, Guid ProductId, int Quantity);
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet("cart/{customerId}", async (Guid customerId, ISender sender) =>
@@ -21,7 +19,7 @@ public class CartEndpoints : ICarterModule
         .WithSummary("Get Cart By CustomerId")
         .Produces(StatusCodes.Status200OK);
 
-        app.MapPost("cart/item", async (AddItemRequest request, CurrentSession currentSession, ISender sender) =>
+        app.MapPost("cart/item", async (CartItemRequest request, ISender sender) =>
         {
             var command = request.Adapt<AddItemCommand>();
 
@@ -34,35 +32,22 @@ public class CartEndpoints : ICarterModule
         .WithSummary("Add Item To The Cart")
         .Produces(StatusCodes.Status200OK);
 
-        app.MapGet("cart/{cartId}/items", (Guid cartId, ISender sender) =>
-        {
-            // Implementation to get cart by customerId
-            return Results.Ok();
-        });
-
         app.MapPost("cart/{cartId}/checkout", async (Guid cartId, ISender sender) =>
         {
             var result = await sender.Send(new CartCheckoutCommand(cartId));
             return Results.Ok();
         });
 
-        app.MapPut("cart/{cartId}/items/{productId}/quantity",
-            async (UpdateProductQuantityRequest request, ISender sender) =>
-        {
-            //var result = await sender.Send();
-            return Results.Ok();
-        });
 
-        app.MapDelete("cart/{cartId}/items/{productId}", (Guid productId, ISender sender) =>
+        app.MapPut("cart/{cartId}/items/{productId}", async (CartItemRequest request, ISender sender) =>
         {
-            // Implementation to get cart by customerId
-            return Results.Ok();
-        });
-
-        app.MapDelete("cart/{cartId}", (Guid cartId, ISender sender) =>
-        {
-            // Implementation to get cart by customerId
-            return Results.Ok();
-        });
+            var command = request.Adapt<RemoveItemCommand>();
+            var result = await sender.Send(command);
+            return Results.Ok(result.Cart);
+        })
+        .WithDisplayName("RemoveItem")
+        .WithDescription("RemoveItem")
+        .WithSummary("Remove Item From Cart")
+        .Produces(StatusCodes.Status200OK); ;
     }
 }

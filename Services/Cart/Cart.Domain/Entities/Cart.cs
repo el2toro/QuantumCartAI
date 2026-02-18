@@ -20,6 +20,7 @@ public class Cart : AggregateRoot
     public string? ShippingOption { get; private set; }
     public Money ShippingCost { get; private set; }
     public Money Subtotal => _items.Aggregate(Money.Zero(Currency), (sum, i) => sum + i.UnitPrice.Multiply(i.Quantity));
+    public Money Total => _items.Aggregate(Money.Zero(Currency), (sum, i) => sum + i.DiscountedPrice.Multiply(i.Quantity));
     public Currency Currency { get; private set; }
 
     // New cart
@@ -30,7 +31,7 @@ public class Cart : AggregateRoot
         CustomerId = customerId;
     }
 
-    public void AddItem(ProductId productId, Quantity requestedQty, Money unitPrice)
+    public void AddItem(ProductId productId, Quantity requestedQty, Money unitPrice, Money discountedPrice)
     {
         // var atp = inventory.GetAtpAsync(skuId).GetAwaiter().GetResult();  // Sync for aggregate
         //var addQty = requestedQty.Min(Quantity.From(1));
@@ -52,7 +53,7 @@ public class Cart : AggregateRoot
         }
         else
         {
-            Apply(new CartItemAddedEvent(Id, productId, requestedQty, unitPrice));
+            Apply(new CartItemAddedEvent(Id, productId, requestedQty, unitPrice, discountedPrice));
         }
 
         //var expiresAt = DateTime.UtcNow.AddMinutes(15);
@@ -104,7 +105,7 @@ public class Cart : AggregateRoot
 
     private void When(CartItemAddedEvent e)
     {
-        _items.Add(new CartItem(e.ProductId, e.Quantity, e.UnitPrice));
+        _items.Add(new CartItem(e.ProductId, e.Quantity, e.UnitPrice, e.DiscountedPrice));
     }
 
     private void When(CartItemRemoved e)

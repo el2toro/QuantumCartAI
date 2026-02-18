@@ -6,5 +6,6 @@ public record CartItemAddedEvent(
     Guid CartId,
     ProductId ProductId,
     Quantity Quantity,
-    Money UnitPrice
+    Money UnitPrice,
+    Money DiscountedPrice
 ) : DomainEventBase;

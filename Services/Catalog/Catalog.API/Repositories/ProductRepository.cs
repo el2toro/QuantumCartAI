@@ -35,6 +35,11 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
         return await dbContext.Products.ToListAsync(cancellationToken);
     }
 
+    public async Task<IEnumerable<Product>> GetProductsByIdAsync(Guid[] productIds, CancellationToken cancellationToken)
+    {
+        return await dbContext.Products.Where(p => productIds.Contains(p.Id)).ToListAsync();
+    }
+
     public async Task<Product> UpdateProduct(Product product, CancellationToken cancellationToken)
     {
         var updatedProduct = dbContext.Products.Update(product).Entity;

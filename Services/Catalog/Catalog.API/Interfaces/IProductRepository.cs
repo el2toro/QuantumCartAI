@@ -3,6 +3,7 @@
 public interface IProductRepository
 {
     Task<IEnumerable<Product>> GetProductsAsync(CancellationToken cancellationToken);
+    Task<IEnumerable<Product>> GetProductsByIdAsync(Guid[] ProductIds, CancellationToken cancellationToken);
     Task<IEnumerable<Product>> GetProductsByCategoryAsync(Guid categoryId, CancellationToken cancellationToken);
     Task<Product?> GetProductById(Guid id, CancellationToken cancellationToken);
     Task<Product> CreateProduct(Product product, CancellationToken cancellationToken);

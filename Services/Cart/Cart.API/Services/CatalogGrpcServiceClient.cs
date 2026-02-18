@@ -9,9 +9,9 @@ public class CatalogGrpcServiceClient(CatalogQueryService.CatalogQueryServiceCli
     public async Task<ProductQueryDto> GetProduct(Guid productId)
     {
         var request = new CatalogQueryRequest { Id = productId.ToString() };
-        var response = await catalogQueryServiceClient.GetProductAsync(request);
+        var product = await catalogQueryServiceClient.GetProductAsync(request);
 
-        return new ProductQueryDto(response.ProductExists);
+        return new ProductQueryDto(Guid.Parse(product.ProductId), product.Quantity, product.Price);
     }
 
     public async Task<bool> UpdateStock(Guid productId, int quantity)

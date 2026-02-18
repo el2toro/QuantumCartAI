@@ -15,7 +15,9 @@ message CatalogQueryRequest {
 }
 
 message CatalogQueryResponse {
-  bool productExists = 1;
+  string productId = 1;
+  int32 price = 2;
+  int32 quantity = 3;
 }
 
 message CatalogStockUpdateRequest {

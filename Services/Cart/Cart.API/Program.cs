@@ -13,6 +13,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using static DiscountService.gRPC.DiscountService;
+using BuildingBlocks.Exceptions.Handler;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -99,11 +100,16 @@ builder.Services.AddGrpcClient<DiscountServiceClient>(options =>
     return handler;
 });
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseExceptionHandler(options => { });
+
 app.MapCarter();
 
 app.Run();

@@ -1,4 +1,6 @@
-﻿namespace Cart.Domain.Exceptions;
+﻿using BuildingBlocks.Exceptions;
+
+namespace Cart.Domain.Exceptions;
 
 public class ItemNotFoundException : DomainException
 {

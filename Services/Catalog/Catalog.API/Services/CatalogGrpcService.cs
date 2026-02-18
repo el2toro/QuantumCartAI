@@ -10,9 +10,7 @@ public class CatalogGrpcService(IProductRepository productRepository)
     {
         var product = await productRepository.GetProductById(Guid.Parse(request.Id), CancellationToken.None);
 
-        bool productInStock = product is not null && product.Quantity > 0;
-
-        return new CatalogQueryResponse() { ProductExists = productInStock };
+        return new CatalogQueryResponse() { ProductId = product!.Id.ToString(), Quantity = product.Quantity, Price = (int)product.Price };
     }
 
     public override async Task<CatalogStockUpdateResponse> UpdateStock(CatalogStockUpdateRequest request, ServerCallContext context)

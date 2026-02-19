@@ -57,16 +57,17 @@ public class OrderingEndpoints : ICarterModule
         .Produces<ValidationProblem>(StatusCodes.Status400BadRequest);
 
         //// Confirm order
-        //group.MapPost("/{id:guid}/confirm", (ISender sender) =>
-        //{
-
-        //})
-        //    .WithName("ConfirmOrder")
-        //    .WithSummary("Confirm an order draft")
-        //    .Produces(StatusCodes.Status204NoContent)
-        //    .Produces(StatusCodes.Status404NotFound)
-        //    .Produces<ValidationProblem>(StatusCodes.Status400BadRequest);
-        //// .RequireAuthorization(PolicyNames.OrderOwnerOrAdmin);
+        app.MapPost("orders/{orderId:guid}/confirm", async (Guid orderId, ISender sender) =>
+        {
+            var result = await sender.Send(new ConfirmOrderCommand(orderId));
+            return Results.Ok(result.OrderDetailsDto);
+        })
+            .WithName("ConfirmOrder")
+            .WithSummary("Confirm an order draft")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces<ValidationProblem>(StatusCodes.Status400BadRequest);
+        // .RequireAuthorization(PolicyNames.OrderOwnerOrAdmin);
 
         //// Cancel order
         //group.MapPost("/{id:guid}/cancel", CancelOrder)

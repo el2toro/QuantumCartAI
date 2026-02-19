@@ -31,4 +31,12 @@ public class OrderingRepository(OrderingDbContext dbContext)
             .Where(o => o.CustomerId == customerId)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<Order> UpdateOrderAsync(Order order, CancellationToken cancellationToken)
+    {
+        var updatedOrder = dbContext.Orders.Update(order).Entity;
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        return updatedOrder;
+    }
 }

@@ -8,4 +8,5 @@ public interface IOrderingRepository
     Task<IEnumerable<Order>> GetOrdersAsync(CustomerId customerId, CancellationToken cancellationToken);
     Task<Order> GetOrderByIdAsync(OrderId orderId, CancellationToken cancellationToken);
     Task<Order> CreateOrderAsync(Order order, CancellationToken cancellationToken);
+    Task<Order> UpdateOrderAsync(Order order, CancellationToken cancellationToken);
 }

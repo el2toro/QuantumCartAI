@@ -16,5 +16,7 @@ public class PaymentSucceededEventHandler(IOrderingRepository orderingRepository
 
         order.AddPayment(paymentSucceededEvent.Amount, paymentSucceededEvent.PaymentMethod);
         order.Confirm();
+
+        var updatedOrder = await orderingRepository.UpdateOrderAsync(order, CancellationToken.None);
     }
 }

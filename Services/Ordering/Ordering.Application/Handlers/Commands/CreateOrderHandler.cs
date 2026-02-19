@@ -34,7 +34,7 @@ public class CreateOrderHandler(IOrderingRepository orderingRepository,
             OrderNumber.Generate(),
             address,
             address,
-            Currency.EUR,
+            Currency.FromCode(command.Currency),
             command.CustomerNotes);
 
         command.OrderItems.ForEach(item => order.AddOrderItem(ProductId.Of(item.ProductId.ToString()),

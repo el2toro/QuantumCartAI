@@ -53,7 +53,7 @@ public class OrderingDbContext : DbContext
             .SelectMany(t => t.GetProperties())
             .Where(p => p.ClrType == typeof(DateTime) || p.ClrType == typeof(DateTime?)))
         {
-            property.SetColumnType("timestamp with time zone");
+            //property.SetColumnType("timestamp without time zone");
         }
 
         // Configure delete behavior for all relationships

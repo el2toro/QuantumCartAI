@@ -43,7 +43,7 @@ app.Use(async (context, next) =>
             new CookieOptions
             {
                 HttpOnly = true,
-                Secure = context.Request.IsHttps,
+                Secure = true, //context.Request.IsHttps,
                 SameSite = SameSiteMode.None,
                 Expires = DateTimeOffset.UtcNow.AddDays(90)
             });

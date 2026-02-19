@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace Cart.Application.Handlers.Queries;
 
-public record GetCartQuery(Guid CustomerId) : IQuery<GetCartResult>;
+public record GetCartQuery() : IQuery<GetCartResult>;
 public record GetCartResult(CartDto Cart);
 public class GetCartQueryHandler(IDistributedCache distributedCache,
     IDiscountGrpcService discountGrpcService,
@@ -40,7 +40,7 @@ public class GetCartQueryHandler(IDistributedCache distributedCache,
             {
                 foreach (var discount in discounts)
                 {
-                   // item.DiscountedPrice = item.Price - (item.Price * (decimal)(discount.Amount / 100));
+                    // item.DiscountedPrice = item.Price - (item.Price * (decimal)(discount.Amount / 100));
                 }
             }
 

@@ -9,9 +9,9 @@ public class CartEndpoints : ICarterModule
     public record CartItemRequest(Guid? CustomerId, Guid? CartId, Guid ProductId, int Quantity);
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("cart/{customerId}", async (Guid customerId, ISender sender) =>
+        app.MapGet("cart", async (ISender sender) =>
         {
-            var result = await sender.Send(new GetCartQuery(customerId));
+            var result = await sender.Send(new GetCartQuery());
             return Results.Ok(result.Cart);
         })
         .WithDisplayName("GetCart")

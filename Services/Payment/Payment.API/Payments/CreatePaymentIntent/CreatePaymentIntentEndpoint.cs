@@ -1,5 +1,15 @@
-﻿namespace Payment.API.Payments.CreatePaymentIntent;
+﻿using Carter;
+using MediatR;
 
-public class CreatePaymentIntentEndpoint
+namespace Payment.API.Payments.CreatePaymentIntent;
+
+public class CreatePaymentIntentEndpoint : ICarterModule
 {
+    public void AddRoutes(IEndpointRouteBuilder app)
+    {
+        app.MapPost("confirm", (ISender sender) =>
+        {
+
+        });
+    }
 }

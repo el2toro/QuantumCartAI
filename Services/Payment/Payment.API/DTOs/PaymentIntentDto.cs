@@ -1,3 +1,3 @@
 ﻿namespace Payment.API.DTOs;
 
-public record PaymentIntentDto(long Amount, string Currency, Guid CustomerId, Guid OrderId);
+public record PaymentIntentDto(decimal Amount, string Currency, Guid CustomerId, Guid OrderId);

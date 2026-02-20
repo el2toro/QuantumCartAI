@@ -4,8 +4,8 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 5000
+EXPOSE 5001
 
 
 # This stage is used to build the service project
@@ -13,12 +13,6 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Services/Cart/Cart.API/Cart.API.csproj", "Services/Cart/Cart.API/"]
-COPY ["Shared/QuantumCartAI.Infrastructure.AspNetCore/QuantumCartAI.Shared.Infrastructure.AspNetCore.csproj", "Shared/QuantumCartAI.Infrastructure.AspNetCore/"]
-COPY ["Services/BuildingBlocks/BuildingBlocks.Messaging/BuildingBlocks.Messaging.csproj", "Services/BuildingBlocks/BuildingBlocks.Messaging/"]
-COPY ["Services/BuildingBlocks/BuildingBlocks/BuildingBlocks.csproj", "Services/BuildingBlocks/BuildingBlocks/"]
-COPY ["Services/Cart/Cart.Application/Cart.Application.csproj", "Services/Cart/Cart.Application/"]
-COPY ["Services/Cart/Cart.Domain/Cart.Domain.csproj", "Services/Cart/Cart.Domain/"]
-COPY ["Services/Cart/Cart.Infrastructure/Cart.Infrastructure.csproj", "Services/Cart/Cart.Infrastructure/"]
 RUN dotnet restore "./Services/Cart/Cart.API/Cart.API.csproj"
 COPY . .
 WORKDIR "/src/Services/Cart/Cart.API"

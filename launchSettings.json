@@ -4,7 +4,14 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "cart.api": "StartDebugging"
+        "cart.api": "StartDebugging",
+        "yarpapigateway": "StartDebugging",
+        "auth.api": "StartDebugging",
+        "catalog.api": "StartDebugging",
+        "chat.api": "StartDebugging",
+        "discount.grpc": "StartDebugging",
+        "ordering.api": "StartDebugging",
+        "payment.api": "StartDebugging"
       }
     }
   }

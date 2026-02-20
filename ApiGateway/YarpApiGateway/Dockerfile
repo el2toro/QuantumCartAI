@@ -13,6 +13,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["ApiGateway/YarpApiGateway/YarpApiGateway.csproj", "ApiGateway/YarpApiGateway/"]
+COPY ["Shared/QuantumCartAI.Infrastructure.AspNetCore/QuantumCartAI.Shared.Infrastructure.AspNetCore.csproj", "Shared/QuantumCartAI.Infrastructure.AspNetCore/"]
 RUN dotnet restore "./ApiGateway/YarpApiGateway/YarpApiGateway.csproj"
 COPY . .
 WORKDIR "/src/ApiGateway/YarpApiGateway"

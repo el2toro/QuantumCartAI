@@ -22,8 +22,11 @@
   <Folder Name="/Services/Catalog/">
     <Project Path="Services/Catalog/Catalog.API/Catalog.API.csproj" Id="2bd79d17-7b77-4761-844b-f5e923df6ca4" />
   </Folder>
-  <Folder Name="/Services/Chat/">
-    <Project Path="Services/Chat/Chat.API/Chat.API.csproj" Id="4a130453-1421-4664-abc5-8309afecb038" />
+  <Folder Name="/Services/CustomerChat/">
+    <Project Path="Services/CustomerChat/CustomerChat.API/CustomerChat.API.csproj" Id="4c345ed0-29e6-42bf-8479-29711fe96df4" />
+    <Project Path="Services/CustomerChat/CustomerChat.Application/CustomerChat.Application.csproj" Id="450a7c09-9c16-4d69-bd67-37f594076130" />
+    <Project Path="Services/CustomerChat/CustomerChat.Domain/CustomerChat.Domain.csproj" Id="cc495851-0239-4426-ba9e-378aeb28148e" />
+    <Project Path="Services/CustomerChat/CustomerChat.Infrastructure/CustomerChat.Infrastructure.csproj" Id="b23fed13-562e-4b8e-afd1-e793ddbdfcd8" />
   </Folder>
   <Folder Name="/Services/Discount/">
     <Project Path="Services/Discount/Discount.gRPC/Discount.gRPC.csproj" Id="d74ca3cd-b4a0-415c-9c7d-293549a4251d" />

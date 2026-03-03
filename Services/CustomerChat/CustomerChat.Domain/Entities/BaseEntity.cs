@@ -1,4 +1,6 @@
-﻿namespace CustomerChat.Domain.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CustomerChat.Domain.Entities;
 
 /// <summary>
 /// Base entity for all domain objects.
@@ -20,4 +22,6 @@ public abstract class BaseEntity
     public void ClearDomainEvents() => _domainEvents.Clear();
 
     protected void MarkAsUpdated() => UpdatedAt = DateTime.UtcNow;
+    [Timestamp] // EF will use this to detect concurrent changes
+    public byte[] RowVersion { get; set; } = Array.Empty<byte>();
 }

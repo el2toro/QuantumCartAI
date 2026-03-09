@@ -4,10 +4,10 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
 {
     public async Task<Product> CreateProduct(Product product, CancellationToken cancellationToken)
     {
-        var crearedProduct = dbContext.Products.Add(product).Entity;
+        var createdProduct = dbContext.Products.Add(product).Entity;
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return crearedProduct;
+        return createdProduct;
     }
 
     public async Task DeleteProduct(Product product, CancellationToken cancellationToken)
@@ -26,7 +26,8 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
     public async Task<IEnumerable<Product>> GetProductsByCategoryAsync(Guid categoryId, CancellationToken cancellationToken)
     {
         return await dbContext.Products
-            .Where(p => p.ProductCategories.Any(category => category.CategoryId == categoryId))
+            .Where(p => p.ProductCategories
+            .Any(category => category.CategoryId == categoryId))
             .ToListAsync(cancellationToken);
     }
 
@@ -37,7 +38,9 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
 
     public async Task<IEnumerable<Product>> GetProductsByIdAsync(Guid[] productIds, CancellationToken cancellationToken)
     {
-        return await dbContext.Products.Where(p => productIds.Contains(p.Id)).ToListAsync();
+        return await dbContext.Products
+            .Where(p => productIds.Contains(p.Id))
+            .ToListAsync();
     }
 
     public async Task<Product> UpdateProduct(Product product, CancellationToken cancellationToken)

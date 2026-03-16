@@ -65,6 +65,15 @@ builder.Services.AddGrpc(options =>
 
 var app = builder.Build();
 
+if (builder.Environment.IsDevelopment())
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
+        db.Database.Migrate();
+    }
+}
+
 // Configure the HTTP request pipeline.
 app.UseAuthentication();
 app.UseAuthorization();

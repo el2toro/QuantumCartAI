@@ -1,25 +1,44 @@
 version: "3.9"
 
 services:
+  postgres:
+    image: postgres:16
+    container_name: catalog_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: catalog_user
+      POSTGRES_PASSWORD: catalog_pass
+      POSTGRES_DB: catalog_db
+    ports:
+      - "5433:5432"
+   
+  redis:
+    image: redis:latest
+    container_name: redis_cache
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/var/lib/redis
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+       - "5672:5672"     # AMQP protocol
+       - "15672:15672"   # Management UI
+    environment:
+       - RABBITMQ_DEFAULT_USER=guest
+       - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+       - rabbitmq_data:/var/lib/rabbitmq
+
+
   yarpapigateway:
     image: ${DOCKER_REGISTRY-}yarpapigateway
     build:
       context: .
       dockerfile: ApiGateway/YarpApiGateway/Dockerfile
-
-  auth.api:
-    image: ${DOCKER_REGISTRY-}authapi
-    build:
-      context: .
-      dockerfile: Services/Auth/Auth.API/Dockerfile
-
-
-  cart.api:
-    image: ${DOCKER_REGISTRY-}cartapi
-    build:
-      context: .
-      dockerfile: Services/Cart/Cart.API/Dockerfile
-
 
   catalog.api:
     image: ${DOCKER_REGISTRY-}catalogapi
@@ -27,30 +46,15 @@ services:
       context: .
       dockerfile: Services/Catalog/Catalog.API/Dockerfile
 
-  chat.api:
-    image: ${DOCKER_REGISTRY-}chatapi
+  cart.api:
+    image: ${DOCKER_REGISTRY-}cartapi
     build:
       context: .
-      dockerfile: Services/Chat/Chat.API/Dockerfile
-
+      dockerfile: Services/Cart/Cart.API/Dockerfile
 
   discount.grpc:
     image: ${DOCKER_REGISTRY-}discountgrpc
     build:
       context: .
       dockerfile: Services/Discount/Discount.gRPC/Dockerfile
-
-
-  ordering.api:
-    image: ${DOCKER_REGISTRY-}orderingapi
-    build:
-      context: .
-      dockerfile: Services/Ordering/Ordering.API/Dockerfile
-
-
-  payment.api:
-    image: ${DOCKER_REGISTRY-}paymentapi
-    build:
-      context: .
-      dockerfile: Services/Payment/Payment.API/Dockerfile
 

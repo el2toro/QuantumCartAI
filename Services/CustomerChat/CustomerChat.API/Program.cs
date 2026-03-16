@@ -4,12 +4,28 @@ using CustomerChat.Application;
 using CustomerChat.Infrastructure;
 using CustomerChat.Infrastructure.Hubs;
 using Microsoft.OpenApi;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ── Logging ───────────────────────────────────────────────────────────────────
 builder.Host.UseSerilog((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration));
+
+// Industry standard for distributed tracing
+builder.Services.AddOpenTelemetry()
+    .WithTracing(tracing => tracing
+        .AddAspNetCoreInstrumentation()  // auto-trace HTTP requests
+        .AddHttpClientInstrumentation()  // auto-trace outbound HTTP
+        .AddEntityFrameworkCoreInstrumentation() // auto-trace DB queries
+        .AddOtlpExporter(opts =>
+            opts.Endpoint = new Uri(builder.Configuration["Observability:JaegerUrl"]!))) // send to Jaeger
+    .WithMetrics(metrics => metrics
+        .AddAspNetCoreInstrumentation()
+        .AddRuntimeInstrumentation() // GC, thread pool metrics
+        .AddPrometheusExporter()  // expose /metrics for Prometheus
+        );
 
 // ── Services ──────────────────────────────────────────────────────────────────
 builder.Services.AddApplication();
@@ -59,6 +75,7 @@ builder.Services.AddCors(opts =>
 // ── App Pipeline ──────────────────────────────────────────────────────────────
 var app = builder.Build();
 
+app.MapPrometheusScrapingEndpoint();
 // Map Carter modules
 app.MapCarter();
 

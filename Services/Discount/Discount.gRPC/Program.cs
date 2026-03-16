@@ -16,6 +16,15 @@ builder.Services.AddDbContext<DiscountDbContext>(config =>
 
 var app = builder.Build();
 
+if (builder.Environment.IsDevelopment())
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<DiscountDbContext>();
+        db.Database.Migrate();
+    }
+}
+
 // Configure the HTTP request pipeline.
 app.MapGrpcService<DiscountServiceImplementation>();
 

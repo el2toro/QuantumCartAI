@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.CQRS;
+using BuildingBlocks.Messaging.IntegrationEvents.Order;
 using Mapster;
 using MassTransit;
 using Ordering.Application.DTOs;
@@ -47,9 +48,10 @@ public class CreateOrderHandler(IOrderingRepository orderingRepository,
 
         var createdOrder = await orderingRepository.CreateOrderAsync(order, cancellationToken);
 
-        await publishedEndpoint.Publish<OrderDraftCreatedEvent>(new(createdOrder.Id,
-            createdOrder.CustomerId,
-            createdOrder.OrderNumber.Value), cancellationToken);
+        await publishedEndpoint.Publish<OrderCreatedEvent>(new(createdOrder.Id.Value,
+            createdOrder.CustomerId.Value,
+            createdOrder.OrderNumber.Value),
+            cancellationToken);
 
         var result = createdOrder.Adapt<OrderDetailsDto>();
 

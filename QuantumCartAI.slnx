@@ -31,7 +31,10 @@
   <Folder Name="/Services/Discount/">
     <Project Path="Services/Discount/Discount.gRPC/Discount.gRPC.csproj" Id="d74ca3cd-b4a0-415c-9c7d-293549a4251d" />
   </Folder>
-  <Folder Name="/Services/Notification/" />
+  <Folder Name="/Services/Notification/">
+    <Project Path="Services/Notification/Notification.Worker/Notification.Worker.csproj" Id="4e36cc4f-1019-43b3-97bd-c07bef7c6506" />
+    <Project Path="Services/Notification/NotificationService/Notification.Application.csproj" Id="be777d43-eb97-422a-9450-28a3349bb232" />
+  </Folder>
   <Folder Name="/Services/Ordering/">
     <Project Path="Services/Ordering/Ordering.API/Ordering.API.csproj" />
     <Project Path="Services/Ordering/Ordering.Application/Ordering.Application.csproj" Id="6c314394-9b09-4f48-a19a-c4201f32631d" />

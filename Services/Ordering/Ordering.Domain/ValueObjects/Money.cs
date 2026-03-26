@@ -1,6 +1,4 @@
-﻿using Ordering.Domain.Enums;
-
-namespace Ordering.Domain.ValueObjects;
+﻿namespace Ordering.Domain.ValueObjects;
 
 public record Money(decimal Amount, Currency Currency)
 {

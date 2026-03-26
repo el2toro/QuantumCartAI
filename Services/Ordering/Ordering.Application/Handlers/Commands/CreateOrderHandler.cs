@@ -5,7 +5,6 @@ using MassTransit;
 using Ordering.Application.DTOs;
 using Ordering.Application.Interfaces;
 using Ordering.Domain.Entities;
-using Ordering.Domain.Events;
 using Ordering.Domain.ValueObjects;
 
 namespace Ordering.Application.Handlers.Commands;

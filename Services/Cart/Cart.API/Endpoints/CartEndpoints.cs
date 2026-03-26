@@ -1,6 +1,5 @@
 ﻿using Cart.Application.Handlers.Commands;
 using Cart.Application.Handlers.Queries;
-using Cart.Domain.ValueObjects;
 
 namespace Cart.API.Endpoints;
 

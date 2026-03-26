@@ -4,13 +4,13 @@ using CustomerChat.Infrastructure.Hubs;
 using CustomerChat.Infrastructure.Persistence;
 using CustomerChat.Infrastructure.Persistence.Repositories;
 using CustomerChat.Infrastructure.Services;
+using CustomerChat.Infrastructure.Services.AI;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using CustomerChat.Infrastructure.Services.AI;
-using Microsoft.EntityFrameworkCore;
 
 namespace CustomerChat.Infrastructure;
 

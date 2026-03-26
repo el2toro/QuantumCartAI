@@ -1,5 +1,4 @@
 ﻿using CustomerChat.Domain.Entities;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CustomerChat.Infrastructure.Persistence;

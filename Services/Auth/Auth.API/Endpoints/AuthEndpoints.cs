@@ -2,7 +2,6 @@
 using Auth.API.Models;
 using Auth.API.Services;
 using Carter;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Auth.API.Endpoints;
 

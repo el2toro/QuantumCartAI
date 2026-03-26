@@ -44,8 +44,8 @@ public class RemoveItemHandler(IDistributedCache distributedCache)
         {
             cart.AddItem(ProductId.From(cartItem.ProductId.ToString()),
                 Quantity.From(cartItem.Quantity),
-                new Money(cartItem.Price),
-                new Money(cartItem.DiscountedPrice));
+                new Money(cartItem.Price, currency),
+                new Money(cartItem.DiscountedPrice, currency));
         }
 
         return cart;

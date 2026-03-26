@@ -1,4 +1,5 @@
 ﻿using Cart.Domain.Aggregates;
+using Cart.Domain.Enums;
 using Cart.Domain.Events;
 using Cart.Domain.Exceptions;
 using Cart.Domain.ValueObjects;

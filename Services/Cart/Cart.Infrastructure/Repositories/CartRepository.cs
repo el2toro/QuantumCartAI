@@ -15,7 +15,7 @@ public class CartRepository(IDistributedCache distributedCache) : ICartRepositor
              ? JsonSerializer.Deserialize<Domain.Entities.Cart>(cartString!)
              : new Domain.Entities.Cart(CartId.From(Guid.Empty.ToString()),
              CustomerId.From(Guid.Empty.ToString()),
-             Currency.None);
+             Currency.USD);
     }
 
     public async Task SaveAsync(Domain.Entities.Cart cart)

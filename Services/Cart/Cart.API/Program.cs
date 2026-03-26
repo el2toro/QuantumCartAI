@@ -1,3 +1,4 @@
+using BuildingBlocks.Exceptions.Handler;
 using BuildingBlocks.Messaging.MassTransit;
 using Cart.API.Services;
 using Cart.Application.Handlers.Commands;
@@ -7,13 +8,12 @@ using Cart.Application.Interfaces;
 using Cart.Domain.Interfaces;
 using Cart.Infrastructure.Repositories;
 using Catalog.gRPC;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using QuantumCartAI.Shared.Infrastructure.AspNetCore.Session;
 using System.Reflection;
 using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using static DiscountService.gRPC.DiscountService;
-using BuildingBlocks.Exceptions.Handler;
 
 
 var builder = WebApplication.CreateBuilder(args);

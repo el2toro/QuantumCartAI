@@ -1,6 +1,5 @@
 ﻿using BuildingBlocks.CQRS;
 using MassTransit;
-using Ordering.Domain.Events;
 
 namespace Ordering.Application.Handlers.Commands;
 
@@ -11,7 +10,7 @@ public class CancelOrderHandler(IPublishEndpoint publishEndpoin) : ICommandHandl
 {
     public async Task<CancelOrderResult> Handle(CancelOrderCommand command, CancellationToken cancellationToken)
     {
-       // await publishEndpoin.Publish<OrderCanceledEvent>("result", cancellationToken);
+        // await publishEndpoin.Publish<OrderCanceledEvent>("result", cancellationToken);
         return new CancelOrderResult();
     }
 }

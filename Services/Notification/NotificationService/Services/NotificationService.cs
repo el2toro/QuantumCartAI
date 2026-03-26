@@ -3,8 +3,8 @@ using Notification.Application.Configurations;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using Twilio;
-using Twilio.Types;
 using Twilio.Rest.Api.V2010.Account;
+using Twilio.Types;
 
 namespace Notification.Application.Services;
 

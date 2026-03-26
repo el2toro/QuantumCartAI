@@ -1,6 +1,4 @@
-﻿using Ordering.Domain.Entities;
-using Ordering.Domain.ValueObjects;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Ordering.Application.DTOs.Requests;
 

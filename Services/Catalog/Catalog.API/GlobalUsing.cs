@@ -1,10 +1,10 @@
-﻿global using Catalog.API.Data;
-global using Catalog.API.Models;
-global using MediatR;
-global using Microsoft.EntityFrameworkCore;
-global using Mapster;
+﻿global using BuildingBlocks.CQRS;
 global using Carter;
-global using BuildingBlocks.CQRS;
+global using Catalog.API.Data;
 global using Catalog.API.DTOs;
 global using Catalog.API.Exceptions;
 global using Catalog.API.Interfaces;
+global using Catalog.API.Models;
+global using Mapster;
+global using MediatR;
+global using Microsoft.EntityFrameworkCore;

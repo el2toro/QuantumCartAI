@@ -1,4 +1,4 @@
-﻿namespace Cart.Domain.ValueObjects;
+﻿namespace Cart.Domain.Enums;
 
 public enum CartStatus
 {

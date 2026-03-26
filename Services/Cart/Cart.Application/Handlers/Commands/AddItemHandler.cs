@@ -11,7 +11,7 @@ using System.Text.Json;
 
 namespace Cart.Application.Handlers.Commands;
 
-public record AddItemCommand(Guid? CustomerId, Guid? CartId, Guid ProductId, int Quantity) : ICommand<AddItemResult>;
+public record AddItemCommand(Guid? CustomerId, Guid? CartId, Guid ProductId, int Quantity, Currency Currency) : ICommand<AddItemResult>;
 public record AddItemResult(CartDto Cart);
 
 public class AddItemHandler(IDistributedCache distributedCache,
@@ -30,8 +30,8 @@ public class AddItemHandler(IDistributedCache distributedCache,
         // Create a cart instance if CustomerId/CartId is not provided
         // Currency can be determined based on user preferences or location (for simplicity, using USD here)
         CustomerId customerId = CustomerId.From(sessionId.ToString()!);
-        var cart = await GetCachedCart(customerId, Currency.USD)
-                 ?? CreateNewCart(customerId, Currency.USD);
+        var cart = await GetCachedCart(customerId, command.Currency)
+                 ?? CreateNewCart(customerId, command.Currency);
 
         // 1. Validate Product (calling CatalogService)
         // Check if product exists and is in stock
@@ -62,8 +62,8 @@ public class AddItemHandler(IDistributedCache distributedCache,
         cart.AddItem(
         ProductId.From(command.ProductId.ToString()),
         Quantity.From(command.Quantity),
-        new Money(product.Price),
-        new Money(latestPrice));
+        new Money(product.Price, command.Currency),
+        new Money(latestPrice, command.Currency));
 
         var cartDto = CreateCartDto(cart);
 
@@ -74,8 +74,8 @@ public class AddItemHandler(IDistributedCache distributedCache,
         await publisher.Publish(new CartItemAddedEvent(cart.Id,
             ProductId.From(command.ProductId.ToString()),
             Quantity.From(command.Quantity),
-            new Money(product.Price),
-            new Money(latestPrice)),
+            new Money(product.Price, command.Currency),
+            new Money(latestPrice, command.Currency)),
             cancellationToken);
 
         return new AddItemResult(cartDto);
@@ -99,8 +99,8 @@ public class AddItemHandler(IDistributedCache distributedCache,
         {
             cart.AddItem(ProductId.From(cartItem.ProductId.ToString()),
                 Quantity.From(cartItem.Quantity),
-                new Money(cartItem.Price),
-                new Money(cartItem.DiscountedPrice));
+                new Money(cartItem.Price, currency),
+                new Money(cartItem.DiscountedPrice, currency));
         }
 
         return cart;

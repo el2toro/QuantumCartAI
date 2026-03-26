@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using QuantumCartAI.Shared.Infrastructure.AspNetCore.Extensions;
 
 namespace QuantumCartAI.Shared.Infrastructure.AspNetCore.Middleware;

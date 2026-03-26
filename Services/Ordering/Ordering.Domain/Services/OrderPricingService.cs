@@ -1,7 +1,4 @@
-﻿using Ordering.Domain.Entities;
-using Ordering.Domain.ValueObjects;
-
-namespace Ordering.Domain.Services;
+﻿namespace Ordering.Domain.Services;
 
 public interface IOrderPricingService
 {

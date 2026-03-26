@@ -21,10 +21,8 @@
 		</PackageReference>
 		<PackageReference Include="Mapster" Version="7.4.0" />
 		<PackageReference Include="MediatR" Version="13.1.0" />
-		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.0" />
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\Shared\QuantumCartAI.Infrastructure.AspNetCore\QuantumCartAI.Shared.Infrastructure.AspNetCore.csproj" />
@@ -35,9 +33,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="$(SolutionDir)Services\Catalog\Catalog.API\Protos\catalog.proto" GrpcServices="Client">
-			<!--<Link>Protos\catalog.proto</Link>-->
-		</Protobuf>
+		<Protobuf Include="$(SolutionDir)Services\Catalog\Catalog.API\Protos\catalog.proto" GrpcServices="Client"></Protobuf>
 		<Protobuf Include="$(SolutionDir)Services\Discount\Discount.gRPC\Protos\discount.proto" GrpcServices="Client"></Protobuf>
 	</ItemGroup>
 </Project>

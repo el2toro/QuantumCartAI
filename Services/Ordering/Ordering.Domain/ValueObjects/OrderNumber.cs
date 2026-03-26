@@ -1,5 +1,4 @@
-﻿using SharedKernel.ValueObjects;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Ordering.Domain.ValueObjects;
 

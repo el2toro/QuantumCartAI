@@ -1,6 +1,7 @@
-﻿using Ordering.Domain.Entities;
+﻿using Ordering.Domain.Aggregates;
+using Ordering.Domain.Common;
+using Ordering.Domain.Entities;
 using Ordering.Domain.ValueObjects;
-using SharedKernel.Common;
 
 public class OrderStatusHistory : AggregateRoot<OrderStatusHistoryId>
 {

@@ -18,8 +18,8 @@ services:
     restart: always
     ports:
       - "6379:6379"
-    volumes:
-      - redis_data:/var/lib/redis
+    # volumes:
+    #   - redis_data:/var/lib/redis
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -30,8 +30,8 @@ services:
     environment:
        - RABBITMQ_DEFAULT_USER=guest
        - RABBITMQ_DEFAULT_PASS=guest
-    volumes:
-       - rabbitmq_data:/var/lib/rabbitmq
+    # volumes:
+    #    - rabbitmq_data:/var/lib/rabbitmq
 
 
   yarpapigateway:

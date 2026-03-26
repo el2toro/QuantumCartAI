@@ -1,5 +1,4 @@
 ﻿using Ordering.Domain.ValueObjects;
-using SharedKernel.Common;
 
 namespace Ordering.Domain.Events;
 

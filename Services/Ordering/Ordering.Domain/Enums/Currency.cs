@@ -1,4 +1,4 @@
-﻿namespace SharedKernel.ValueObjects;
+﻿namespace Ordering.Domain.Enums;
 
 public enum Currency
 {

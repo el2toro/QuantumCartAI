@@ -1,7 +1,8 @@
-﻿using Ordering.Domain.Events;
+﻿using Ordering.Domain.Aggregates;
+using Ordering.Domain.Events;
 using Ordering.Domain.Exceptions;
 using Ordering.Domain.ValueObjects;
-using SharedKernel.Common;
+
 
 namespace Ordering.Domain.Entities;
 

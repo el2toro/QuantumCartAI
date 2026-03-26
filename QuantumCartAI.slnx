@@ -46,7 +46,6 @@
   </Folder>
   <Folder Name="/Shared/">
     <Project Path="Shared/QuantumCartAI.Infrastructure.AspNetCore/QuantumCartAI.Shared.Infrastructure.AspNetCore.csproj" Id="208e4e82-e0d1-409b-9eb7-2e708e167950" />
-    <Project Path="Shared/SharedKernel/SharedKernel.csproj" />
   </Folder>
   <Project Path="docker-compose.dcproj">
     <Build />

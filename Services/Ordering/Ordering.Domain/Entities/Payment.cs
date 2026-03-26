@@ -1,5 +1,5 @@
-﻿using Ordering.Domain.ValueObjects;
-using SharedKernel.Common;
+﻿using Ordering.Domain.Aggregates;
+using Ordering.Domain.ValueObjects;
 
 namespace Ordering.Domain.Entities;
 

@@ -49,7 +49,7 @@ if (app.Environment.IsDevelopment())
     var scope = app.Services.CreateScope();
     var service = scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
 
-    //   await service.Database.MigrateAsync();
+    // await service.Database.MigrateAsync();
 }
 
 // Configure the HTTP request pipeline.
